@@ -1,7 +1,7 @@
 import unittest
 from speculator.utils import poloniex
         
-# https://poloniex.com/public?command=returnChartData&currencyPair=USDT_BTC&start=1483228800&end=1483272000&period=86400
+# https://poloniex.com/public?command=returnChartData&currencyPair=USDT_BTC&start=1483228800&end=1483315200&period=86400
 
 EXPECTED_RESPONSE = [{'close': 999.36463982,
                       'date': 1483228800,
