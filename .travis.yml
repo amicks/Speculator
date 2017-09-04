@@ -2,6 +2,6 @@ language: python
 python:
  - "3.6"
 install:
- - pip install delorean
+ - pip install delorean requests
 script:
  - python -m unittest discover
