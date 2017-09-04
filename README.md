@@ -9,9 +9,11 @@ I hope to gain insights into the accuracy of market technical analysis combined 
 This tool should not be used as financial advice, but serve merely as offering a display of technical analysis which may offer another perspective on any investments.
 
 ### Getting Started
-The project is not ready for use at this time.
+The project is not ready for use at this time.  Still in development.
 
 ### Testing Implementations
 ##### Running Unit Tests
-`cd $SPECULATOR_PATH/speculator/tests`
-`python -m unittest discover`
+```
+cd $SPECULATOR_PATH/speculator/tests
+python -m unittest discover
+```
