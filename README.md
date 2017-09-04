@@ -1,4 +1,4 @@
-# Speculator [![Travis]()](https://img.shields.io/travis/AllstonMickey/Speculator.svg?style=flat-square)
+# Speculator [![travis build](https://img.shields.io/travis/AllstonMickey/Speculator.svg?style=flat-square)](://travis-ci.org/AllstonMickey/Speculator)
 This project aims to predict future stock prices using popular algorithms from machine learning and finance.
 
 Currently, prices are being taken from Poloniex, a Bitcoin/cryptocurrency asset exchange.  Normal markets will also be added in future updates.
