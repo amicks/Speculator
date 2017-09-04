@@ -3,14 +3,27 @@ from speculator.utils import poloniex
 from speculator.utils import date
 import sys
 
-def get_rsi_poloniex(direction='last', unit='day', count=14, period=86400, currency_pair='USDT_BTC'):
-    now_delorean = date.now_delorean()
-    now_epoch = int(now_delorean.epoch)
-    prev_epoch = date.shift_epoch(now_delorean, direction, unit, count + 1) # +1 for initial date
-    print('prev_epoch: {0}'.format(prev_epoch))
-    print('now_epoch: {0}'.format(now_epoch))
+def get_rsi_poloniex(year=None, month=None, day=None,
+                     direction='last', unit='day', count=14,
+                     period=86400, currency_pair='USDT_BTC'):
+    if year or month or day:
+        if not year:
+            year = 2017
+        if not month:
+            month = 1
+        if not day:
+            day = 1
+        cur_delorean = date.date_to_delorean(year, month, day)
+    else:
+        # Market never 'closed' because it's still open
+        # -> add 1 to the count to get another date
+        count += 1
+        cur_delorean = date.now_delorean()
+    
+    cur_epoch = int(cur_delorean.epoch)
+    prev_epoch = date.shift_epoch(cur_delorean, direction, unit, count) 
 
-    json = poloniex.chart_json(prev_epoch, now_epoch, period, currency_pair)
+    json = poloniex.chart_json(prev_epoch, cur_epoch, period, currency_pair)
     changes = poloniex.get_gains_losses(poloniex.parse_changes(json))
     return rsi.rs_idx(changes['gains'], changes['losses'])
     
