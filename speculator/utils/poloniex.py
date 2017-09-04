@@ -1,4 +1,7 @@
 import requests
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 def chart_json(start_epoch, end_epoch, period, currency_pair):
     """
@@ -20,7 +23,9 @@ def chart_json(start_epoch, end_epoch, period, currency_pair):
     url = 'https://poloniex.com/public?command=returnChartData&' \
           'currencyPair={0}&start={1}&end={2}&period={3}'.format(
            currency_pair, start_epoch, end_epoch, period) 
+    logger.debug(' HTTP Request URL:\n{0}'.format(url))
     json = requests.get(url).json()
+    logger.debug(' JSON:\n{0}'.format(json))
     return json
 
 def parse_changes(json):
@@ -31,14 +36,24 @@ def parse_changes(json):
     return: Closing price changes
         type: list of floats
     """
+    if 'error' in json:
+        logger.error(' Invalid parameters in URL for HTTP response')
+        raise SystemExit
+    elif all(val == 0 for val in json[0]):
+        logger.error(' Bad HTTP response.  Time unit too short?')
+        raise SystemExit
+
     dates = len(json)
-    if dates <= 1:
-        return None
+    if dates <= 1: # time to short
+        logger.error(' Not enough dates to calculate changes')
+        raise SystemExit
+    
     changes = []
     for date in range(1, dates): # second, minute, hour, day, week, month, year...
         last_close = json[date - 1]['close']
         now_close  = json[date]['close']
         changes.append(now_close - last_close)
+    logger.debug('Market Changes (from JSON):\n{0}'.format(changes))
     return changes
 
 def get_gains_losses(changes):
@@ -57,5 +72,6 @@ def get_gains_losses(changes):
             res['gains'].append(change)
         else:
             res['losses'].append(change * -1)
+    logger.debug(' Gains:\n{0}\nLosses:\n{1}'.format(res['gains'], res['losses']))
     return res
 
