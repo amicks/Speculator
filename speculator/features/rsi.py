@@ -1,3 +1,5 @@
+from speculator.utils import math
+
 """
 Relative Strength Index:
 RSI = 100 - (100 / (1 + RS))
@@ -30,22 +32,4 @@ def rs(gains, losses):
     # Number of days that the data was collected through
     period = len(gains) + len(losses)
 
-    return avg(gains, period=period) / avg(losses, period=period)
-
-def avg(vals, period=None):
-    """
-    nums: Values to calculate average from
-        type: list of ints/floats
-    
-    period: Number of days that the data was collected through
-        type: int
-
-    return: Average of values throughout a period
-        type: int/float
-    """ 
-    sum = 0
-    for v in vals:
-        sum += v
-    if period is None:
-        period = len(vals)
-    return sum / period
+    return math.avg(gains, period=period) / math.avg(losses, period=period)
