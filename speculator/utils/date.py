@@ -36,9 +36,6 @@ def date_to_epoch(year, month, day):
 def now_delorean():
     return Delorean(timezone='UTC')
 
-def now_epoch():
-    return int(Delorean(timezone='UTC').epoch)
-
 def shift_epoch(delorean, direction, unit, num_shifts):
     """
     Gets the resulting epoch after a shift of a Delorean
@@ -78,3 +75,4 @@ def generate_epochs(delorean, direction, unit, num_shifts):
     """
     return [int(delorean._shift_date(direction, unit, shift).epoch)
             for shift in range(num_shifts)]
+

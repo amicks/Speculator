@@ -2,20 +2,20 @@
 Various math functions used throughout Speculator
 """
 
-def avg(vals, period=None):
+def avg(vals, count=None):
     """
     nums: Values to calculate average from
         type: list of ints/floats
-    
-    period: Number of days that the data was collected through
+    count: Number of units of time that the data was collected through
         type: int
 
-    return: Average of values throughout a period
+    return: Average of values throughout a count
         type: float
     """ 
     sum = 0
     for v in vals:
         sum += v
-    if period is None:
-        period = len(vals)
-    return float(sum) / period
+    if count is None:
+        count = len(vals)
+    return float(sum) / count
+
