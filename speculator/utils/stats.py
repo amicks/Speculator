@@ -11,11 +11,11 @@ def avg(vals, period=None):
         type: int
 
     return: Average of values throughout a period
-        type: int/float
+        type: float
     """ 
     sum = 0
     for v in vals:
         sum += v
     if period is None:
         period = len(vals)
-    return sum / period
+    return float(sum) / period

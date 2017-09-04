@@ -1,4 +1,4 @@
-from speculator.utils import math
+from speculator.utils import stats
 
 """
 Relative Strength Index:
@@ -32,4 +32,4 @@ def rs(gains, losses):
     # Number of days that the data was collected through
     period = len(gains) + len(losses)
 
-    return math.avg(gains, period=period) / math.avg(losses, period=period)
+    return stats.avg(gains, period=period) / stats.avg(losses, period=period)
