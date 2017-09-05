@@ -76,7 +76,7 @@ def generate_epochs(delorean, direction, unit, num_shifts):
     return [int(delorean._shift_date(direction, unit, shift).epoch)
             for shift in range(num_shifts)]
 
-def get_end_start_epochs(year, month, day, direction, unit, count):
+def get_end_start_epochs(year, month, day, direction, unit, num_shifts):
     if year or month or day: # Date is specified
         if not year:
             year = 2017
@@ -90,6 +90,6 @@ def get_end_start_epochs(year, month, day, direction, unit, count):
         initial_delorean = now_delorean()
     
     initial_epoch = int(initial_delorean.epoch)
-    shifted_epoch = shift_epoch(initial_delorean, direction, unit, count) 
+    shifted_epoch = shift_epoch(initial_delorean, direction, unit, num_shifts)
     return { 'initial': initial_epoch, 'shifted': shifted_epoch }
 
