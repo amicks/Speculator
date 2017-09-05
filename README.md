@@ -10,10 +10,29 @@ This tool should not be used as financial advice, but serve merely as offering a
 
 ### Getting Started
 The project is not ready for use at this time.  Still in development.
+However, feel free to commit and contribute to the development.
+A style guide is not yet written, but in the meantime, you can get a gyst of the style through the existing codebase.
 
-### Testing Implementations
-##### Running Unit Tests
-```
-cd $SPECULATOR_PATH/speculator/tests
-python -m unittest discover
-```
+### Testing
+Please read docs/testing.md
+
+### Roadmap
+#### September, 2017
+_5th_:  Williams %R algorithm
+_6th_:  Williams %R implementation
+_8th_:  Moving Average Convergence Divergence (MACD) algorithm
+_10th_: Moving Average Convergence Divergence (MACD) implementation
+_12th_: Price Rate of Change (PROC) algorithm
+_15th_: Price Rate of Change (PROC) implementation
+_17th_: On Balance Volume (OBV) algorithm
+_20th_: On Balance Volume (OBV) implementation
+#### October, 2017
+_1st_:  Random Forest implementation
+_15th_: GUI
+_20th_: Project release 1.0
+_28th_: Add implementation for other exchanges (traditional & cryptos)
+
+#### Misc. Todo
+* Update docs when each task on the roadmap is completed, do NOT wait until the project is over!
+* Integration/Unit test each functionality before pushing/merging code to master
+* Implement other machine learning algorithms with the same dataset, compare results
