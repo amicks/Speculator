@@ -7,12 +7,10 @@ The Delorean package acts as an intermediary in the conversion process by creati
 
 ### Dependencies:
 * [Delorean](http://delorean.readthedocs.io/en/latest/install.html)
-  ```
-  pip install delorean
-  ```
+  ` pip install delorean `
 
-#### Functions
-##### date\_to\_delorean(year, month, day)
+### Functions
+#### date\_to\_delorean(year, month, day)
 Converts a date with year, month, and day, to a Delorean object in UTC time
 ###### Args:
 arg | type | description
