@@ -1,5 +1,5 @@
 import unittest
-from speculator import main
+from speculator.features.implementations import rsi as rsi_imp
 from speculator.utils import poloniex
         
 # https://poloniex.com/public?command=returnChartData&currencyPair=USDT_BTC&start=1483228800&end=1483315200&period=86400
@@ -25,7 +25,7 @@ EXPECTED_CHANGES = [EXPECTED_RESPONSE[1]['close'] - EXPECTED_RESPONSE[0]['close'
 
 class PoloniexIntegrationTest(unittest.TestCase):
     def test_get_rsi_poloniex(self):
-        rsi = main.get_rsi_poloniex(year=2017, month=1, day=1, unit='day', count=3) 
+        rsi = rsi_imp.get_rsi_poloniex(year=2017, month=1, day=1, unit='day', count=3) 
         self.assertAlmostEqual(rsi, 71.888274, places=4)
 
     def test_parse_changes(self):
