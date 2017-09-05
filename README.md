@@ -16,31 +16,23 @@ A style guide is not yet written, but in the meantime, you can get a gyst of the
 Please read the [testing doc](docs/testing.md).
 
 ### Roadmap
-#### September, 2017
-
-Test | Name
---- | ---
-- [ ] | test!
-
 Date | Task
 ---  | ---
-_5th_ | Williams %R algorithm
-_6th_ | Williams %R implementation
-_8th_ |  Moving Average Convergence Divergence (MACD) algorithm
-_10th_ | Moving Average Convergence Divergence (MACD) implementation
-_12th_ | Price Rate of Change (PROC) algorithm
-_15th_ | Price Rate of Change (PROC) implementation
-_17th_ | On Balance Volume (OBV) algorithm
-_20th_ | On Balance Volume (OBV) implementation
-#### October, 2017
-Date | Task
----  | ---
-_1st_ | Random Forest implementation
-_15th_ | GUI
-_20th_ | Project release 1.0
-_28th_ | Add implementation for other exchanges (traditional & cryptos)
+09.05.17 | Williams %R algorithm
+09.06.17 | Williams %R implementation
+09.08.17 | Moving Average Convergence Divergence (MACD) algorithm
+09.10.17 | Moving Average Convergence Divergence (MACD) implementation
+09.12.17 | Price Rate of Change (PROC) algorithm
+09.15.17 | Price Rate of Change (PROC) implementation
+09.17.17 | On Balance Volume (OBV) algorithm
+09.20.17 | On Balance Volume (OBV) implementation
+10.01.17 | Random Forest implementation
+10.15.17 | GUI
+10.20.17 | Project release 1.0
+10.28.17 | Add implementation for other exchanges (traditional & cryptos)
 
 #### Misc. Todo
+* Add Style Guide and Contributor doc for contributors
 * Update docs when each task on the roadmap is completed, do NOT wait until the project is over!
 * Integration/Unit test each functionality before pushing/merging code to master
 * Implement other machine learning algorithms with the same dataset, compare results
