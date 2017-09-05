@@ -76,3 +76,20 @@ def generate_epochs(delorean, direction, unit, num_shifts):
     return [int(delorean._shift_date(direction, unit, shift).epoch)
             for shift in range(num_shifts)]
 
+def get_end_start_epochs(year, month, day, direction, unit, count):
+    if year or month or day: # Date is specified
+        if not year:
+            year = 2017
+        if not month:
+            month = 1
+        if not day:
+            day = 1
+        initial_delorean = date_to_delorean(year, month, day)
+    else: # Date is not specified, get current date
+        count += 1 # Get another date because market is still open
+        initial_delorean = now_delorean()
+    
+    initial_epoch = int(initial_delorean.epoch)
+    shifted_epoch = shift_epoch(initial_delorean, direction, unit, count) 
+    return { 'initial': initial_epoch, 'shifted': shifted_epoch }
+

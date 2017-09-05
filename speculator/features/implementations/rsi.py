@@ -2,8 +2,8 @@ from speculator.features.algorithms import rsi as rsi_alg
 from speculator.utils import date
 from speculator.utils import poloniex
 
-def get_rsi_poloniex(year=None, month=None, day=None,
-                     direction='last', unit='day', count=14,
+def rsi_poloniex(year=None, month=None, day=None,
+                     unit='day', count=14,
                      period=86400, currency_pair='USDT_BTC'):
     """
     Gets RSI of a currency pair from Poloniex.com exchange
@@ -32,23 +32,9 @@ def get_rsi_poloniex(year=None, month=None, day=None,
             the speed and change of price movements
         type: float
     """
-    if year or month or day: # Date is specified
-        if not year:
-            year = 2017
-        if not month:
-            month = 1
-        if not day:
-            day = 1
-        cur_delorean = date.date_to_delorean(year, month, day)
-    else: # Date is not specified, get current date
-        count += 1 # Get another date because market is still open
-        direction = 'last' # Can't get future prices, must go back
-        cur_delorean = date.now_delorean()
-    
-    cur_epoch = int(cur_delorean.epoch)
-    prev_epoch = date.shift_epoch(cur_delorean, direction, unit, count) 
-
-    json = poloniex.chart_json(prev_epoch, cur_epoch, period, currency_pair)
+    epochs = date.get_end_start_epochs(year, month, day, 'last', unit, count)
+    json = poloniex.chart_json(epochs['shifted'],
+                               epochs['initial'], period, currency_pair)
     changes = poloniex.get_gains_losses(poloniex.parse_changes(json))
     return rsi_alg.rs_idx(changes['gains'], changes['losses'])
 

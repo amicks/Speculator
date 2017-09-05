@@ -1,5 +1,6 @@
 import unittest
 from speculator.features.implementations import rsi as rsi_imp
+from speculator.features.implementations import stoch_osc as so_imp
 from speculator.utils import poloniex
         
 # https://poloniex.com/public?command=returnChartData&currencyPair=USDT_BTC&start=1483228800&end=1483315200&period=86400
@@ -23,27 +24,33 @@ EXPECTED_RESPONSE = [{'close': 999.36463982,
 
 EXPECTED_CHANGES = [EXPECTED_RESPONSE[1]['close'] - EXPECTED_RESPONSE[0]['close']]
 
-class PoloniexIntegrationTest(unittest.TestCase):
-    def test_get_rsi_poloniex(self):
-        rsi = rsi_imp.get_rsi_poloniex(year=2017, month=1, day=1, unit='day', count=3) 
-        self.assertAlmostEqual(rsi, 71.888274, places=4)
+ny_midnight   = 1483228800 # 01/01/2017, 00:00 epoch
+ny_noon       = 1483315200 # 01/02/2017, 00:00 epoch
+period        = 86400 # width of Candlesticks in seconds
+currency_pair = 'USDT_BTC'
+http_response = poloniex.chart_json(ny_midnight, ny_noon, period, currency_pair)
 
+class PoloniexIntegrationTest(unittest.TestCase):
     def test_parse_changes(self):
-        ny_midnight   = 1483228800 # 01/01/2017, 00:00
-        ny_noon       = 1483315200 # 01/02/2017, 00:00
-        period        = 86400
-        currency_pair = 'USDT_BTC'
-        http_response = poloniex.chart_json(ny_midnight, ny_noon, period, currency_pair)
         self.assertEqual(poloniex.parse_changes(http_response), EXPECTED_CHANGES) 
 
     def test_get_gains_losses(self):
-        ny_midnight   = 1483228800 # 01/01/2017, 00:00
-        ny_noon       = 1483315200 # 01/02/2017, 00:00
-        period        = 86400
-        currency_pair = 'USDT_BTC'
-        http_response = poloniex.chart_json(ny_midnight, ny_noon, period, currency_pair)
-
         res = {'gains': [g for g in EXPECTED_CHANGES if g >= 0],
                'losses': [l for l in EXPECTED_CHANGES if l < 0]}
-        self.assertEqual(poloniex.get_gains_losses(poloniex.parse_changes(http_response)), res)
+        self.assertEqual(poloniex.get_gains_losses(
+                             poloniex.parse_changes(http_response)
+                         ), res)
+
+    def test_get_attribute(self):
+        res = [attribute['quoteVolume'] for attribute in http_response]
+        attr = 'quoteVolume'
+        self.assertEqual(poloniex.get_attribute(http_response, attr), res) 
+
+    def test_get_rsi_poloniex(self):
+        rsi = rsi_imp.rsi_poloniex(year=2017, month=1, day=1, unit='day', count=3) 
+        self.assertAlmostEqual(rsi, 71.888274, places=4)
+
+    def test_get_stoch_osc_poloniex(self):
+        so = so_imp.so_poloniex(year=2017, month=1, day=1, unit='day', count=3) 
+        self.assertAlmostEqual(so, 88.9532721773, places=4)
 

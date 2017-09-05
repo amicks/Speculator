@@ -9,7 +9,6 @@ Stochastic Oscillator:
 
 %K follows the speed/momentum of a price in a market
 """
-def stoch_oscillator(closing, low, high):
+def stochastic_oscillator(closing, low, high):
     return 100 * (closing - low) / (high - low)
-
 
