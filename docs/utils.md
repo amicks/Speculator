@@ -6,11 +6,10 @@ Date is used to convert dates of year, month, day, into UTC epoch time.
 The Delorean package acts as an intermediary in the conversion process by creating a datetime object in UTC time, shifting the date to another one if requested, and converting to a floating point epoch.  The year, month, and day format provides an easy interface without complex parsing when using in core features.  The conversion to epochs aids in standardizing the time into something more efficient, and allows for an easy hook into the Poloniex API.
 
 ### Dependencies:
-* [Delorean](http://delorean.readthedocs.io/en/latest/install.html)
-  ` pip install delorean `
+* [Delorean](http://delorean.readthedocs.io/en/latest/install.html), ` pip install delorean `
 
 ### Functions
-#### def date\_to\_delorean(year, month, day):
+#### date\_to\_delorean(year, month, day):
 Converts a date with year, month, and day, to a Delorean object in UTC time
 ###### Args:
 arg | type | description
