@@ -1,7 +1,7 @@
 import logging
 import requests
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 def chart_json(start_epoch, end_epoch, period, currency_pair):
