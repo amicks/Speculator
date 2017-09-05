@@ -10,7 +10,7 @@ The Delorean package acts as an intermediary in the conversion process by creati
   ` pip install delorean `
 
 ### Functions
-#### date\_to\_delorean(year, month, day)
+#### def date\_to\_delorean(year, month, day):
 Converts a date with year, month, and day, to a Delorean object in UTC time
 ###### Args:
 arg | type | description
