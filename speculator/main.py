@@ -1,5 +1,6 @@
 from speculator.features.implementations import rsi as rsi_imp
 from speculator.features.implementations import stoch_osc as so_imp
+from speculator.features.algorithms import sma
 import argparse
 
 def get_args():
@@ -23,11 +24,18 @@ def main():
     args = get_args()
     print('Relative Strength Index:')
     print(rsi_imp.rsi_poloniex(year=args.year, month=args.month, day=args.day,
-          unit=args.unit, count=args.count, period=args.period, currency_pair=args.symbol))
+          unit=args.unit, count=args.count,
+          period=args.period, currency_pair=args.symbol))
 
     print('Stochastic Oscillator:')
     print(so_imp.so_poloniex(year=args.year, month=args.month, day=args.day,
-          unit=args.unit, count=args.count, period=args.period, currency_pair=args.symbol))
+          unit=args.unit, count=args.count,
+          period=args.period, currency_pair=args.symbol))
+
+    print('Simple Moving Average:')
+    print(sma.get_poloniex(year=args.year, month=args.month, day=args.day,
+          unit=args.unit, count=args.count,
+          period=args.period, currency_pair=args.symbol))
 
 if __name__=='__main__':
     raise SystemExit(main())

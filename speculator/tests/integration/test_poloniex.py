@@ -1,4 +1,5 @@
 import unittest
+from speculator.features.algorithms import sma
 from speculator.features.implementations import rsi as rsi_imp
 from speculator.features.implementations import stoch_osc as so_imp
 from speculator.utils import poloniex
@@ -53,4 +54,8 @@ class PoloniexIntegrationTest(unittest.TestCase):
     def test_get_stoch_osc_poloniex(self):
         so = so_imp.so_poloniex(year=2017, month=1, day=1, unit='day', count=3) 
         self.assertAlmostEqual(so, 88.9532721773, places=4)
+
+    def test_get_sma_poloniex(self):
+        eval_sma = sma.get_poloniex(2017, 1, 1, 'day', 3, 86400, 'USDT_BTC') 
+        self.assertAlmostEqual(eval_sma, 974.808582, places=4)
 
