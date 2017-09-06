@@ -16,20 +16,22 @@ A style guide is not yet written, but in the meantime, you can get a gyst of the
 Please read the [testing doc](docs/testing.md).
 
 ### Roadmap
-Date | Task
----  | ---
-09.05.17 | Simple Moving Average (SMA) algorithm & implementation
-09.06.17 | Exponential Moving Average (EMA) algorithm & implementation
-09.08.17 | Moving Average Convergence Divergence (MACD) algorithm
-09.10.17 | Moving Average Convergence Divergence (MACD) implementation
-09.12.17 | Price Rate of Change (PROC) algorithm
-09.15.17 | Price Rate of Change (PROC) implementation
-09.17.17 | On Balance Volume (OBV) algorithm
-09.20.17 | On Balance Volume (OBV) implementation
-10.01.17 | Random Forest implementation
-10.15.17 | GUI
-10.20.17 | Project release 1.0
-10.28.17 | Add implementation for other exchanges (traditional & cryptos)
+Date | Task | Status 
+---  | ---  | ---
+09.03.17 | Relative Strength Index (RSI) & Stochastic Oscillator (SO) algorithms | Done
+09.04.17 | RSI and SO implementations with Poloniex | Done
+09.05.17 | Simple Moving Average (SMA) algorithm & implementation | Done
+09.06.17 | Exponential Moving Average (EMA) algorithm & implementation |
+09.08.17 | Moving Average Convergence Divergence (MACD) algorithm | 
+09.10.17 | Moving Average Convergence Divergence (MACD) implementation | 
+09.12.17 | Price Rate of Change (PROC) algorithm | 
+09.15.17 | Price Rate of Change (PROC) implementation | 
+09.17.17 | On Balance Volume (OBV) algorithm | 
+09.20.17 | On Balance Volume (OBV) implementation | 
+10.01.17 | Random Forest implementation | 
+10.15.17 | GUI | 
+10.20.17 | Project release 1.0 | 
+10.28.17 | Add implementation for other exchanges (traditional & cryptos) | 
 
 #### Misc. Todo
 * Add Style Guide and Contributor doc for contributors

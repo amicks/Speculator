@@ -1,5 +1,5 @@
 from datetime import datetime as dt
-from delorean import Delorean, move_datetime_day
+from delorean import Delorean
 
 def date_to_delorean(year, month, day):
     """

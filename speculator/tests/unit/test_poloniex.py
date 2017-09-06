@@ -22,13 +22,19 @@ EXPECTED_RESPONSE = [{'close': 999.36463982,
 
 EXPECTED_CHANGES = [EXPECTED_RESPONSE[1]['close'] - EXPECTED_RESPONSE[0]['close']]
 
+YEAR          = 2017
+MONTH         = 1
+DAY           = 1
+UNIT          = 'day'
+COUNT         = 3
+PERIOD        = 86400 # width of Candlesticks in seconds
+CURRENCY_PAIR = 'USDT_BTC'
+EPOCH1        = 1483228800 # 01/01/2017, 00:00 epoch
+EPOCH2        = 1483315200 # 01/02/2017, 00:00 epoch
+
 class PoloniexTest(unittest.TestCase):
     def test_chart_json(self):
-        ny_midnight   = 1483228800 # 01/01/2017, 00:00
-        ny_noon       = 1483315200 # 01/02/2017, 00:00
-        period        = 86400
-        currency_pair = 'USDT_BTC'
-        http_response = poloniex.chart_json(ny_midnight, ny_noon, period, currency_pair)
+        http_response = poloniex.chart_json(EPOCH1, EPOCH2, PERIOD, CURRENCY_PAIR)
         self.assertEqual(http_response, EXPECTED_RESPONSE)
 
     def test_parse_changes(self):
