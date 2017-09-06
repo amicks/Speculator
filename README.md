@@ -18,8 +18,8 @@ Please read the [testing doc](docs/testing.md).
 ### Roadmap
 Date | Task
 ---  | ---
-09.05.17 | Williams %R algorithm
-09.06.17 | Williams %R implementation
+09.05.17 | Simple Moving Average (SMA) algorithm & implementation
+09.06.17 | Exponential Moving Average (EMA) algorithm & implementation
 09.08.17 | Moving Average Convergence Divergence (MACD) algorithm
 09.10.17 | Moving Average Convergence Divergence (MACD) implementation
 09.12.17 | Price Rate of Change (PROC) algorithm
