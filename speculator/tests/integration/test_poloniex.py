@@ -32,7 +32,7 @@ PERIOD        = 86400 # width of Candlesticks in seconds
 CURRENCY_PAIR = 'USDT_BTC'
 EPOCH1        = 1483228800 # 01/01/2017, 00:00 epoch
 EPOCH2        = 1483315200 # 01/02/2017, 00:00 epoch
-HTTP_RESPONSE = poloniex.chart_json(EPOCH1, EPOCH2, PERIOD, CURRENCY_PAIR)
+HTTP_RESPONSE = poloniex.chart_json(EPOCH1, EPOCH2, PERIOD, CURRENCY_PAIR)[0]
 
 class PoloniexIntegrationTest(unittest.TestCase):
     def test_parse_changes(self):

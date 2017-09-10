@@ -3,6 +3,10 @@ from speculator.utils import date, poloniex
 from datetime import datetime as dt
 import argparse
 
+from sklearn.ensemble import RandomForestClassifier
+import pandas as pd
+import numpy as np
+
 def get_args():
     today = dt.now()
     parser = argparse.ArgumentParser(
@@ -26,23 +30,18 @@ def main():
 
     epochs = date.get_end_start_epochs(args.year, args.month, args.day,
         'last', args.unit, args.count)
-    json = poloniex.chart_json(epochs['shifted'], 
+    chart = poloniex.chart_json(epochs['shifted'], 
         epochs['initial'], args.period, args.symbol)
+    json, url = chart[0], chart[1]
 
     print('Relative Strength Index:')
     print(rsi.from_poloniex(json))
-    #print(rsi.get_poloniex(args.year, args.month, args.day,
-    #    args.unit, args.count, args.period, args.symbol))
 
     print('Stochastic Oscillator:')
     print(so.from_poloniex(json))
-    #print(so.get_poloniex(args.year, args.month, args.day,
-    #    args.unit, args.count, args.period, args.symbol))
 
     print('Simple Moving Average:')
     print(sma.from_poloniex(json))
-    #print(sma.get_poloniex(args.year, args.month, args.day,
-    #    args.unit, args.count, args.period, args.symbol))
 
     
 

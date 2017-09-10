@@ -62,7 +62,7 @@ year: 1 <= year <= 9999, Poloniex market on year
     """
     epochs  = date.get_end_start_epochs(year, month, day, 'last', unit, count)
     json = poloniex.chart_json(epochs['shifted'],
-        epochs['initial'], period, currency_pair)
+        epochs['initial'], period, currency_pair)[0]
     return from_poloniex(json)
 
 def from_poloniex(json):

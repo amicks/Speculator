@@ -34,7 +34,7 @@ EPOCH2        = 1483315200 # 01/02/2017, 00:00 epoch
 
 class PoloniexTest(unittest.TestCase):
     def test_chart_json(self):
-        http_response = poloniex.chart_json(EPOCH1, EPOCH2, PERIOD, CURRENCY_PAIR)
+        http_response = poloniex.chart_json(EPOCH1, EPOCH2, PERIOD, CURRENCY_PAIR)[0]
         self.assertEqual(http_response, EXPECTED_RESPONSE)
 
     def test_parse_changes(self):

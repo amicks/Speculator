@@ -40,7 +40,7 @@ def chart_json(start_epoch, end_epoch, period, currency_pair):
         logger.error(' Not enough dates to calculate changes')
         raise SystemExit
 
-    return json
+    return json, url
 
 def parse_changes(json):
     """
