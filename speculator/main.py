@@ -3,10 +3,6 @@ from speculator.utils import date, poloniex
 from datetime import datetime as dt
 import argparse
 
-from sklearn.ensemble import RandomForestClassifier
-import pandas as pd
-import numpy as np
-
 def get_args():
     today = dt.now()
     parser = argparse.ArgumentParser(
@@ -25,6 +21,35 @@ def get_args():
         help='Currency pairs, ex: USDT_BTC')
     return parser.parse_args()
 
+def double_chart_duration(url):
+    """ 
+    Gets chart data with double the duration
+
+    url: URL to original chart JSON data
+        type: string
+
+    return: JSON, URL tuple of a chart
+    """
+    # Parse URL into a dictionary.  First item is poloniex.com, ignore.
+    vals = dict(field.split('=') for field in url.split('&')[1:])
+    epoch_diff = int(vals['end']) - int(vals['start'])
+    vals['start'] = str(int(vals['start']) - epoch_diff)
+    return poloniex.chart_json(**vals)
+
+def get_training_data(json, url):
+    eval_sma = sma.from_poloniex(json)
+    print('Short SMA: {0}'.format(eval_sma))
+
+    # Long term SMA (double the time from previous SMA evaluation)
+    eval_sma_2t = sma.from_poloniex(double_chart_duration(url)[0]) 
+    print('Long SMA: {0}'.format(eval_sma_2t))
+
+    eval_rsi = rsi.from_poloniex(json)
+    print('RSI: {0}'.format(eval_rsi))
+
+    eval_so = so.from_poloniex(json)
+    print('SO: {0}'.format(eval_so))
+
 def main():
     args = get_args()
 
@@ -32,17 +57,7 @@ def main():
         'last', args.unit, args.count)
     chart = poloniex.chart_json(epochs['shifted'], 
         epochs['initial'], args.period, args.symbol)
-    json, url = chart[0], chart[1]
-
-    print('Relative Strength Index:')
-    print(rsi.from_poloniex(json))
-
-    print('Stochastic Oscillator:')
-    print(so.from_poloniex(json))
-
-    print('Simple Moving Average:')
-    print(sma.from_poloniex(json))
-
+    get_training_data(*chart)
     
 
 if __name__=='__main__':

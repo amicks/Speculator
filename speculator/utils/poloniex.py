@@ -4,7 +4,7 @@ import requests
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def chart_json(start_epoch, end_epoch, period, currency_pair):
+def chart_json(start, end, period, currencyPair):
     """
     Requests cryptocurrency chart data from Poloniex.com
 
@@ -25,7 +25,7 @@ def chart_json(start_epoch, end_epoch, period, currency_pair):
     """
     url = 'https://poloniex.com/public?command=returnChartData&' \
           'currencyPair={0}&start={1}&end={2}&period={3}'.format(
-           currency_pair, start_epoch, end_epoch, period) 
+           currencyPair, start, end, period) 
     logger.debug(' HTTP Request URL:\n{0}'.format(url))
     json = requests.get(url).json()
     logger.debug(' JSON:\n{0}'.format(json))
