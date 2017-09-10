@@ -11,8 +11,10 @@ def eval_algorithm(closes):
 
 def get_poloniex(year, month, day, unit, count, period, currency_pair):
     epochs = date.get_end_start_epochs(year, month, day, 'last', unit, count)
-    json   = poloniex.chart_json(epochs['shifted'], 
-                                 epochs['initial'], period, currency_pair)
+    json = poloniex.chart_json(epochs['shifted'], 
+        epochs['initial'], period, currency_pair)
+    return from_poloniex(json)
+
+def from_poloniex(json):
     closes = [date['close'] for date in json]
     return eval_algorithm(closes)
-

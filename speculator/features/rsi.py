@@ -61,8 +61,10 @@ year: 1 <= year <= 9999, Poloniex market on year
         type: float
     """
     epochs  = date.get_end_start_epochs(year, month, day, 'last', unit, count)
-    json    = poloniex.chart_json(epochs['shifted'],
-                                  epochs['initial'], period, currency_pair)
+    json = poloniex.chart_json(epochs['shifted'],
+        epochs['initial'], period, currency_pair)
+    return from_poloniex(json)
+
+def from_poloniex(json):
     changes = poloniex.get_gains_losses(poloniex.parse_changes(json))
     return eval_algorithm(changes['gains'], changes['losses'])
-
