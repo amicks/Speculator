@@ -1,27 +1,15 @@
 from speculator.features import rsi, sma, so
 from speculator.utils import date, poloniex
-from sklearn.datasets import load_iris
+
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix
+
 from datetime import datetime as dt
 import pandas as pd
 import numpy as np
 np.random.seed(0)
 pd.options.display.width=150
-
-"""
-def double_chart_duration(url):
-    Gets chart data with double the duration
-
-    url: URL to original chart JSON data
-        type: string
-
-    return: JSON, URL tuple of a chart
-    # Parse URL into a dictionary.  First item is poloniex.com, ignore.
-    vals = dict(field.split('=') for field in url.split('&')[1:])
-    epoch_diff = int(vals['end']) - int(vals['start'])
-    vals['start'] = str(int(vals['start']) - epoch_diff)
-    return poloniex.chart_json(**vals)
-"""
 
 def feature_data(short_json, long_json):
     """
@@ -41,19 +29,6 @@ def feature_data(short_json, long_json):
             'short_sma': sma.from_poloniex(short_json),
             'rsi'      : rsi.from_poloniex(short_json),
             'so'       : so.from_poloniex(short_json)}
-
-def set_training_targets(data, delta=0):
-    for d, features in enumerate(data[:-1]):
-        next_features = data[d + 1]
-        high_close = next_features['close'] + (delta / 2)
-        low_close  = next_features['close'] - (delta / 2)
-        if features['close'] < low_close:
-            features['target'] = 'rise'
-        elif features['close'] > high_close:
-            features['target'] = 'fall'
-        else:
-            features['target'] = 'neutral'
-    return data
 
 def load_json(symbol):
     """
@@ -79,7 +54,47 @@ def load_historical_features(symbol, shift):
         long = json[k : (shift * 2) + k]
         data.append(feature_data(short, long))
     return data
-   
-vals = load_historical_features('USDT_BTC', 14)
-for k, v in enumerate(set_training_targets(vals)):
-    print(k, v)
+
+def set_training_targets(data, delta=0):
+    for d, features in enumerate(data[:-1]):
+        next_features = data[d + 1]
+        high_close = next_features['close'] + (delta / 2)
+        low_close  = next_features['close'] - (delta / 2)
+        if features['close'] < low_close:
+            features['target'] = 1
+            #features['target'] = 'rise'
+        elif features['close'] > high_close:
+            features['target'] = -1
+            #features['target'] = 'fall'
+        else:
+            features['target'] = 0
+            #features['target'] = 'neutral'
+
+dataset = load_historical_features('USDT_BTC', 14)
+set_training_targets(dataset, delta=50)
+
+df = pd.DataFrame(dataset[:-1]) # Ignore last day, no target to predict
+features = [f for f in df.columns if f is not 'target'] # Get features being used
+
+# Set Axes for data, relate x (all data features) to y (target values)
+# Get training and test sets for both
+x = df.drop('target', axis=1).drop('close', axis=1) # Dataset with unknown target
+y = df['target'] # Target values
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=0)
+
+# Train Random Forest model to training sets
+rfc = RandomForestClassifier(n_jobs=2, random_state=0)
+rfc.fit(x_train, y_train)
+
+# Get predictions, test accuracy
+y_pred = rfc.predict(x_test)
+print(accuracy_score(y_test, y_pred))
+
+# Get confusion matrix
+print(pd.DataFrame(confusion_matrix(y_test, y_pred),
+                   index=['Actual Fall', 'Actual Neutral', 'Actual Rise'],
+                   columns=['Pred. Fall', 'Pred. Neutral', 'Pred. Rise']))
+
+# Get feature importance
+print(list(zip(features, rfc.feature_importances_)))
+
