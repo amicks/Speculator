@@ -14,8 +14,7 @@ def eval_algorithm(gains, losses):
     
     return: Momentum indicator of a market measuring
             the speed and change of price movements.
-        type: float
-    """
+        type: float """
     return 100 - (100 / (1 + eval_rs(gains, losses)))
 
 def eval_rs(gains, losses):
@@ -31,7 +30,13 @@ def eval_rs(gains, losses):
     """
     # Number of days that the data was collected through
     count = len(gains) + len(losses)
-    return stats.avg(gains, count=count) / stats.avg(losses, count=count)
+    avg_gains = stats.avg(gains, count=count)
+    avg_losses = stats.avg(losses,count = count)
+
+    try:
+        return avg_gains / avg_losses
+    except ZeroDivisionError:
+        return avg_gains
 
 def get_poloniex(year, month, day, unit, count, period, currency_pair):
     """

@@ -4,6 +4,23 @@ import requests
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def json_to_url(json, currencyPair):
+    start = json[0]['date']
+    end = json[-1]['date']
+    diff = end - start
+
+    # Get period by a ratio from calculated period to valid periods
+    # Ratio closest to 1 is the period
+    # Valid values: 300, 900, 1800, 7200, 14400, 86400
+    periods = [300, 900, 1800, 7200, 14400, 86400]
+    diffs = { p: abs(1 - (p / (diff / len(json)))) for p in periods }
+    period = min(diffs, key=diffs.get)
+    
+    url = 'https://poloniex.com/public?command=returnChartData&' \
+          'currencyPair={0}&start={1}&end={2}&period={3}'.format(
+           currencyPair, start, end, period) 
+    return url
+
 def chart_json(start, end, period, currencyPair):
     """
     Requests cryptocurrency chart data from Poloniex.com
