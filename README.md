@@ -1,4 +1,4 @@
-# Speculator [![travis build](https://img.shields.io/travis/AllstonMickey/Speculator.svg?style=flat-square)](://travis-ci.org/AllstonMickey/Speculator)
+# Speculator [![travis build](https://img.shields.io/travis/AllstonMickey/Speculator.svg)](://travis-ci.org/AllstonMickey/Speculator)
 This project aims to predict future stock prices using popular algorithms from machine learning and finance.
 
 Currently, prices are being taken from Poloniex, a Bitcoin/cryptocurrency asset exchange.  Normal markets will also be added in future updates.
@@ -28,7 +28,7 @@ Date | Task | Status
 09.15.17 | Price Rate of Change (PROC) implementation | 
 09.17.17 | On Balance Volume (OBV) algorithm | 
 09.20.17 | On Balance Volume (OBV) implementation | 
-10.01.17 | Random Forest implementation | In Progress
+10.01.17 | Random Forest implementation | Done
 10.15.17 | GUI | 
 10.20.17 | Project release 1.0 | 
 10.28.17 | Add implementation for other exchanges (traditional & cryptos) | 
