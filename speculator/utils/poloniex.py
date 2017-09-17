@@ -87,7 +87,7 @@ def parse_changes(json):
     dates = len(json)
     for date in range(1, dates): 
         last_close = json[date - 1]['close']
-        now_close  = json[date]['close']
+        now_close = json[date]['close']
         changes.append(now_close - last_close)
     logger.debug('Market Changes (from JSON):\n{0}'.format(changes))
     return changes
@@ -128,7 +128,7 @@ def get_attribute(json, attr):
     return res
 
 def get_json_shift(year, month, day, unit, count, period, symbol):
-    """ Gets JSON from Poloniex.com exchange
+    """ Gets JSON from shifted date by the Poloniex API
 
     Args:
         year: Int between 1 and 9999.

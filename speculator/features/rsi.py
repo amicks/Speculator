@@ -36,27 +36,21 @@ def eval_rs(gains, losses):
     count = len(gains) + len(losses)
 
     avg_gains = stats.avg(gains, count=count)
-    avg_losses = stats.avg(losses,count = count)
+    avg_losses = stats.avg(losses,count=count)
 
     try:
         return avg_gains / avg_losses
     except ZeroDivisionError: # No losses
         return avg_gains
 
-def get_poloniex(year, month, day, unit, count, period, symbol):
-    epochs = date.get_end_start_epochs(year, month, day, 'last', unit, count)
-    json = poloniex.chart_json(epochs['shifted'], epochs['initial'],
-                               period, symbol)[0]
-    return from_poloniex(json)
-
-#def get_poloniex(*args):
+def get_poloniex(*args):
     """ Gets RSI of a currency pair from Poloniex.com exchange
 
     Returns:
         Float between 0 and 100, momentum indicator
         of a market measuring the speed and change of price movements.
     """
-#    return from_poloniex(poloniex.get_json_shift(*args))
+    return from_poloniex(poloniex.get_json_shift(*args))
 
 def from_poloniex(json):
     """ Gets RSI from a JSON of market data
