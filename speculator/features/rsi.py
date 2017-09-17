@@ -1,4 +1,6 @@
-from speculator.utils import date, poloniex, stats
+from speculator.utils import date
+from speculator.utils import poloniex
+from speculator.utils import stats
 
 """
 Relative Strength Index:
@@ -8,68 +10,63 @@ RSI = 100 - (100 / (1 + RS))
 """
 
 def eval_algorithm(gains, losses):
-    """
-    rs: avg(period gain) / avg(period loss)
-        type: float
+    """ Evaluates the RSI algorithm
     
-    return: Momentum indicator of a market measuring
-            the speed and change of price movements.
-        type: float """
+    Args:
+        gains: List of price gains.
+        losses: List of prices losses.
+
+    Returns:
+        Float between 0 and 100, momentum indicator
+        of a market measuring the speed and change of price movements.
+    """
     return 100 - (100 / (1 + eval_rs(gains, losses)))
 
 def eval_rs(gains, losses):
-    """
-    gains: Market price gains throughout a period
-        type: list of floats
-    losses: Market price losses throughout a period
-        type: list of floats
+    """ Evaluates the RS variable in RSI algorithm
 
-    return: Momentum indicator of a market measuring
-            the speed and change of price movements
-        type: float
+    Args:
+        gains: List of price gains.
+        losses: List of prices losses.
+
+    Returns:
+        Float of average gains over average losses.
     """
     # Number of days that the data was collected through
     count = len(gains) + len(losses)
+
     avg_gains = stats.avg(gains, count=count)
     avg_losses = stats.avg(losses,count = count)
 
     try:
         return avg_gains / avg_losses
-    except ZeroDivisionError:
+    except ZeroDivisionError: # No losses
         return avg_gains
 
-def get_poloniex(year, month, day, unit, count, period, currency_pair):
-    """
-    Gets RSI of a currency pair from Poloniex.com exchange
-year: 1 <= year <= 9999, Poloniex market on year
-        type: integer
-    month: 1 <= month <= 12, Poloniex market on month
-        type: integer
-    day: 1 <= day <= 31, Poloniex market on day
-        type: integer
-    direction: 'last' (move backwards in time) or
-               'next' (move forwards in time)
-        type: string
-    unit: 'day', 'week', 'month', 'year' (Poloniex doesn't accept smaller times)
-        type: string
-    num_shifts: Number of shifts by unit in direction
-        type: integer
-    period: Candlestick period in seconds.
-            Valid values: 300, 900, 1800, 7200, 14400, 86400
-        type: int
-    
-    currency_pair: Currency symbols to compare
-        type: string
-
-    return: Momentum indicator of a market measuring
-            the speed and change of price movements
-        type: float
-    """
-    epochs  = date.get_end_start_epochs(year, month, day, 'last', unit, count)
-    json = poloniex.chart_json(epochs['shifted'],
-        epochs['initial'], period, currency_pair)[0]
+def get_poloniex(year, month, day, unit, count, period, symbol):
+    epochs = date.get_end_start_epochs(year, month, day, 'last', unit, count)
+    json = poloniex.chart_json(epochs['shifted'], epochs['initial'],
+                               period, symbol)[0]
     return from_poloniex(json)
 
+#def get_poloniex(*args):
+    """ Gets RSI of a currency pair from Poloniex.com exchange
+
+    Returns:
+        Float between 0 and 100, momentum indicator
+        of a market measuring the speed and change of price movements.
+    """
+#    return from_poloniex(poloniex.get_json_shift(*args))
+
 def from_poloniex(json):
+    """ Gets RSI from a JSON of market data
+    
+    Args:
+        json: List of dates where each entry is a dict of raw market data.
+    
+    Returns:
+        Float between 0 and 100, momentum indicator
+        of a market measuring the speed and change of price movements.
+    """
     changes = poloniex.get_gains_losses(poloniex.parse_changes(json))
     return eval_algorithm(changes['gains'], changes['losses'])

@@ -2,81 +2,90 @@ from datetime import datetime as dt
 from delorean import Delorean
 
 def date_to_delorean(year, month, day):
-    """
-    Creates a Delorean object in UTC from a date.
+    """ Converts date arguments to a Delorean instance in UTC
+    
+    Args:
+        year: int between 1 and 9999.
+        month: int between 1 and 12.
+        day: int between 1 and 31.
 
-    year: 1 <= year <= 9999
-        type: integer
-    month: 1 <= month <= 12 
-        type: integer
-    day: 1 <= day <= 31
-        type: integer
-
-    return: UTC date
-        type: Delorean
+    Returns:
+        Delorean instance in UTC of date.
     """
     return Delorean(datetime=dt(year, month, day), timezone='UTC')
 
 def date_to_epoch(year, month, day):
-    """
-    Creates a Delorean object then gets its epoch in UTC from a date.
+    """ Converts a date to epoch in UTC
 
-    year: 1 <= year <= 9999
-        type: integer
-    month: 1 <= month <= 12 
-        type: integer
-    day: 1 <= day <= 31
-        type: integer
+    Args:
+        year: int between 1 and 9999.
+        month: int between 1 and 12.
+        day: int between 1 and 31.
 
-    return: UTC epoch
-        type: integer
+    Returns:
+        Int epoch in UTC from date.
     """
     return int(date_to_delorean(year, month, day).epoch)
 
 def now_delorean():
+    """ Returns the current time as a Delorean instance in UTC """
     return Delorean(timezone='UTC')
 
-def shift_epoch(delorean, direction, unit, num_shifts):
-    """
-    Gets the resulting epoch after a shift of a Delorean
+def shift_epoch(delorean, direction, unit, count):
+    """ Gets the resulting epoch after a time shift of a Delorean
     
-    delorean: Holds initial datetime
-        type: Delorean
-    direction: 'last' (move backwards in time) or
-               'next' (move forwards in time)
-        type: string
-    unit: 'second', 'minute', 'hour', 'day', 'week', 'month', 'year'
-        type: string
-    num_shifts: Number of shifts by unit in direction
-        type: integer
+    Args:
+        delorean: Delorean datetime instance to shift from.
+        direction: String to shift time forwards or backwards.
+            Valid values: 'last', 'next'.
+        unit: String of time period unit for count argument.
+            What unit in direction should be shifted?
+            Valid values: 'hour', 'day', 'week', 'month', 'year'.
+        count: Int of units.
+            How many units to shift in direction?
 
-    return: shifted epoch
-        type: integer
+    Returns:
+        Int epoch in UTC from a shifted Delorean
     """
-    return int(delorean._shift_date(direction, unit, num_shifts).epoch)
+    return int(delorean._shift_date(direction, unit, count).epoch)
 
-def generate_epochs(delorean, direction, unit, num_shifts):
-    """
-    Generates a list of epochs from the data of
-    a Delorean to some units in some direction.
+def generate_epochs(delorean, direction, unit, count):
+    """ Generates epochs from a shifted Delorean instance
     
-    delorean: Holds initial datetime
-        type: Delorean
-    direction: 'last' (move backwards in time) or
-               'next' (move forwards in time)
-        type: string
-    unit: 'second', 'minute', 'hour', 'day', 'week', 'month', 'year'
-        type: string
-    num_shifts: Number of shifts by unit in direction
-        type: integer
+    Args:
+        delorean: Delorean datetime instance to shift from.
+        direction: String to shift time forwards or backwards.
+            Valid values: 'last', 'next'.
+        unit: String of time period unit for count argument.
+            What unit in direction should be shifted?
+            Valid values: 'hour', 'day', 'week', 'month', 'year'.
+        count: Int of units.
+            How many units to shift in direction?
 
-    return: epochs within a range of shifts from the initial Delorean
-        type: list of integers
+    Returns:
+        Generator of count int epochs in UTC from a shifted Delorean
     """
-    return [int(delorean._shift_date(direction, unit, shift).epoch)
-            for shift in range(num_shifts)]
+    for shift in range(count):
+        yield int(delorean._shift_date(direction, unit, shift).epoch)
 
-def get_end_start_epochs(year, month, day, direction, unit, num_shifts):
+def get_end_start_epochs(year, month, day, direction, unit, count):
+    """ Gets epoch from a start date and epoch from a shifted date
+
+    Args:
+        year: Int between 1 and 9999.
+        month: Int between 1 and 12.
+        day: Int between 1 and 31.
+        direction: String to shift time forwards or backwards.
+            Valid values: 'last', 'next'.
+        unit: String of time period unit for count argument.
+            How far back to check historical market data.
+            Valid values: 'hour', 'day', 'week', 'month', 'year'.
+        count: Int of units.
+            How far back to check historical market data?
+
+    Returns:
+        Dict of int epochs in UTC with keys 'initial' and 'shifted'
+    """
     if year or month or day: # Date is specified
         if not year:
             year = 2017
@@ -90,6 +99,6 @@ def get_end_start_epochs(year, month, day, direction, unit, num_shifts):
         initial_delorean = now_delorean()
     
     initial_epoch = int(initial_delorean.epoch)
-    shifted_epoch = shift_epoch(initial_delorean, direction, unit, num_shifts)
+    shifted_epoch = shift_epoch(initial_delorean, direction, unit, count)
     return { 'initial': initial_epoch, 'shifted': shifted_epoch }
 

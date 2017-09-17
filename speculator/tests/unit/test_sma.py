@@ -1,5 +1,5 @@
-import unittest
 from speculator.features import sma
+import unittest
 
 class SMATest(unittest.TestCase):
     def test_eval_algorithm(self):

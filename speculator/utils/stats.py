@@ -3,14 +3,14 @@ Various math functions used throughout Speculator
 """
 
 def avg(vals, count=None):
-    """
-    nums: Values to calculate average from
-        type: list of ints/floats
-    count: Number of units of time that the data was collected through
-        type: int
+    """ Returns the average value
 
-    return: Average of values throughout a count
-        type: float
+    Args:
+        vals: List of numbers to calculate average from.
+        count: Int of total count that vals was part of.
+
+    Returns:
+        Float average value throughout a count.
     """ 
     sum = 0
     for v in vals:

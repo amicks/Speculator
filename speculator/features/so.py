@@ -1,4 +1,5 @@
-from speculator.utils import date, poloniex
+from speculator.utils import date
+from speculator.utils import poloniex
 
 """
 Stochastic Oscillator:
@@ -13,16 +14,37 @@ Stochastic Oscillator:
 """
 
 def eval_algorithm(closing, low, high):
+    """ Evaluates the SO algorithm
+
+    Args:
+        closing: Float of current closing price.
+        low: Float of lowest low closing price throughout some duration.
+        high: Float of highest high closing price throughout some duration.
+
+    Returns:
+        Float SO between 0 and 100.
+    """
     return 100 * (closing - low) / (high - low)
 
-def get_poloniex(year, month, day, unit, count, period, currency_pair):
-    epochs = date.get_end_start_epochs(year, month, day, 'last', unit, count)
-    json = poloniex.chart_json(epochs['shifted'], 
-        epochs['initial'], period, currency_pair)[0]
-    return from_poloniex(json)
+def get_poloniex(*args):
+    """ Gets SO of a currency pair from Poloniex.com exchange
+
+    Returns:
+        Float SO between 0 and 100.
+    """
+    return from_poloniex(poloniex.get_json_shift(*args))
 
 def from_poloniex(json):
+    """ Gets SO from a JSON of market data
+    
+    Args:
+        json: List of dates where each entry is a dict of raw market data.
+    
+    Returns:
+        Float SO between 0 and 100.
+    """
     close  = json[-1]['close'] # Latest closing price
     low    = min(poloniex.get_attribute(json, 'low')) # Lowest low
     high   = max(poloniex.get_attribute(json, 'high')) # Highest high
     return eval_algorithm(close, low, high)
+

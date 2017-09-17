@@ -1,5 +1,5 @@
-import unittest
 from speculator.utils import stats
+import unittest
 
 class StatsTest(unittest.TestCase):
     def test_avg(self):

@@ -60,6 +60,7 @@ class Market(object):
             count: Int of units.
                 How far back to check historical market data.
             period: Int defining width of each chart candlestick in seconds.
+                Valid values: 300, 900, 1800, 7200, 14400, 86400.
             partition: Int of how many dates to take into consideration
                 when evaluating technical analysis indicators.
             delta: Positive number defining a price buffer between what is
@@ -69,7 +70,6 @@ class Market(object):
             update: Bool whether to update attributes upon class function calls.
             seed: Int random state seed used to split data sets.
         """
-
         self.symbol = symbol 
         self.update = update
         self.seed = seed
@@ -102,11 +102,11 @@ class Market(object):
             count: Int of units.
                 How far back to check historical market data.
             period: Int defining width of each chart candlestick in seconds.
+                Valid values: 300, 900, 1800, 7200, 14400, 86400.
 
         Returns:
             List of dates where each entry is a dict of raw market data.
         """
-
         today = dt.now()
         DIRECTION = 'last'
         epochs = date.get_end_start_epochs(today.year, today.month, today.day,
@@ -145,7 +145,6 @@ class Market(object):
                 (2 * delta) is equivalent to the size of the neutral market,
                 where no trend is seen.
         """
-
         for d, features in enumerate(self.feature_dataset[:-1]):
             next_features = self.feature_dataset[d + 1]
             high_close = next_features['close'] + (delta / 2)
@@ -164,7 +163,6 @@ class Market(object):
         Args:
             seed: Int random state seed used to split data sets.
         """
-        
         x = self.axes['features']
         y = self.axes['target']
         sets = train_test_split(x['all'], y['all'], random_state=seed)
@@ -208,6 +206,7 @@ class RandomForest(Market):
         """ Return list of features and their importance in classification """
         return list(zip(self.feature_names,
                         self.classifier.feature_importances_))
+
 
 def feature_data(short_json, long_json):
     """ Gets technical analysis features from market data JSONs
