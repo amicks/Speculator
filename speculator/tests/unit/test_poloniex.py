@@ -29,7 +29,7 @@ DAY           = 1
 UNIT          = 'day'
 COUNT         = 3
 PERIOD        = 86400 # width of Candlesticks in seconds
-SYMBOL = 'USDT_BTC'
+SYMBOL        = 'USDT_BTC'
 EPOCH1        = 1483228800 # 01/01/2017, 00:00 epoch
 EPOCH2        = 1483315200 # 01/02/2017, 00:00 epoch
 

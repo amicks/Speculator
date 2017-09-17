@@ -47,7 +47,7 @@ class PoloniexIntegrationTest(unittest.TestCase):
         res = {'gains': [g for g in EXPECTED_CHANGES if g >= 0],
                'losses': [l for l in EXPECTED_CHANGES if l < 0]}
         self.assertEqual(poloniex.get_gains_losses(
-            poloniex.parse_changes(HTTP_RESPONSE)), res)
+                         poloniex.parse_changes(HTTP_RESPONSE)), res)
 
     def test_get_attribute(self):
         res = [attribute['quoteVolume'] for attribute in HTTP_RESPONSE]
@@ -56,16 +56,16 @@ class PoloniexIntegrationTest(unittest.TestCase):
 
     def test_get_rsi_poloniex(self):
         eval_rsi = rsi.get_poloniex(YEAR, MONTH, DAY,
-            UNIT, COUNT, PERIOD, SYMBOL) 
+                                    UNIT, COUNT, PERIOD, SYMBOL) 
         self.assertAlmostEqual(eval_rsi, 71.888274, places=4)
 
     def test_get_stoch_osc_poloniex(self):
         eval_so = so.get_poloniex(YEAR, MONTH, DAY,
-            UNIT, COUNT, PERIOD, SYMBOL)
+                                  UNIT, COUNT, PERIOD, SYMBOL)
         self.assertAlmostEqual(eval_so, 88.9532721773, places=4)
 
     def test_get_sma_poloniex(self):
         eval_sma = sma.get_poloniex(YEAR, MONTH, DAY,
-            UNIT, COUNT, PERIOD, SYMBOL)
+                                    UNIT, COUNT, PERIOD, SYMBOL)
         self.assertAlmostEqual(eval_sma, 974.808582, places=4)
 

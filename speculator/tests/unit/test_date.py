@@ -1,5 +1,5 @@
-import unittest
 from speculator.utils import date
+import unittest
 
 class DateTest(unittest.TestCase):
     def test_shift_epoch(self):
