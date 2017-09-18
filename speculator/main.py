@@ -60,8 +60,7 @@ def main():
            100 * accuracy_score(rf.axes['targets']['test'], pred)))
     print('OOB: {0:.3f}%'.format(100 * rf.oob_score_))
     print('\nConfusion Matrix:')
-    print(pd.crosstab(rf.axes['targets']['test'], pred,
-                      rownames=['(A)'], colnames=['(P)']))
+    print(rf.confusion_matrix(rf.axes['targets']['test'], pred))
     print('\nFeature Importance:')
     print(rf.feature_importances())
 

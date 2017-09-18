@@ -116,8 +116,9 @@ class RandomForest(RandomForestClassifier):
         Args:
             delta: Positive number defining a price buffer between what is
                 classified as a bullish/bearish market for the training set.
-                (2 * delta) is equivalent to the size of the neutral market,
-                where no trend is seen.
+                delta is equivalent to the total size of the neutral price zone.
+                delta / 2 is equivalent to either the positive or negative
+                threshold of the neutral price zone.
         """
         TARGET_NAMES = {'bearish': -1, 'neutral': 0, 'bullish': 1}
         targets = [] # Keep track of targets
@@ -216,12 +217,11 @@ def main():
            100 * accuracy_score(rf.axes['targets']['test'], pred)))
     print('OOB: {0:.3f}%'.format(100 * rf.oob_score_))
     print('\nConfusion Matrix:')
-    print(pd.crosstab(rf.axes['targets']['test'], pred,
-                      rownames=['(A)'], colnames=['(P)']))
+    print(rf.confusion_matrix(rf.axes['targets']['test'], pred))
     print('\nFeature Importance:')
     print(rf.feature_importances())
 
 if __name__=='__main__':
     SEED = 1
     pd.options.display.width=150
-    raise SYstemExit(main())
+    raise SystemExit(main())
