@@ -1,5 +1,7 @@
 import argparse
 from datetime import datetime as dt
+import pandas as pd
+from sklearn.metrics import accuracy_score
 from speculator import analysis
 from speculator.features import rsi
 from speculator.features import so
@@ -31,12 +33,38 @@ def get_args():
 
 def main():
     args = get_args()
-    rf = analysis.RandomForest(seed=0)
-    rf.fit_data(random_state=rf.seed)
-    rf.predict_test_set()
-    print(rf.accuracy())
-    print(rf.confusion_matrix())
+
+    m = analysis.Market('USDT_BTC')
+
+    # Create two DataFrames, short and long partition times
+    ptn_short = 14
+    ptn_long = 28
+    df_short = m.dataframe(ptn_short)
+    df_long = m.dataframe(ptn_long)
+    
+    # Update column names to avoid conflicts
+    df_long.columns = ['long_{0}'.format(c) for c in df_long.columns]
+
+    # Merge the two DataFrames
+    df = pd.concat([df_short[14:].reset_index(drop=True), df_long], axis=1)
+
+    # Feed the DataFrame to a Random Forest Classifier
+    rf = analysis.RandomForest(df, random_state=SEED, oob_score=True)
+    rf.set_training_targets(25)
+    rf.split_sets(random_state=SEED)
+    rf.train()
+    
+    # Get the predictions and accuracies
+    pred = rf.predict(rf.axes['features']['test'])
+    print('Accuracy Score: {0:.3f}%'.format(
+           100 * accuracy_score(rf.axes['targets']['test'], pred)))
+    print('OOB: {0:.3f}%'.format(100 * rf.oob_score_))
+    print('\nConfusion Matrix:')
+    print(pd.crosstab(rf.axes['targets']['test'], pred,
+                      rownames=['(A)'], colnames=['(P)']))
+    print('\nFeature Importance:')
     print(rf.feature_importances())
 
 if __name__=='__main__':
+    SEED = 1
     raise SystemExit(main())
