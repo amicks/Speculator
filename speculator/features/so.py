@@ -24,7 +24,10 @@ def eval_algorithm(closing, low, high):
     Returns:
         Float SO between 0 and 100.
     """
-    return 100 * (closing - low) / (high - low)
+    try:
+        return 100 * (closing - low) / (high - low)
+    except ZeroDivisionError: # High and low are the same
+        return 100 * (closing - low)
 
 def get_poloniex(*args):
     """ Gets SO of a currency pair from Poloniex.com exchange
