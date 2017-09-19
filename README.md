@@ -4,7 +4,7 @@ Speculator [![travis build](https://img.shields.io/travis/AllstonMickey/Speculat
   <img src="https://i.cubeupload.com/sfy2x2.png">
 </p>
 
-Speculator predicts the next 'closing' price for cryptocurrencies, including Bitcoin, Ethereum, and many more.
+Speculator predicts the market trend for cryptocurrencies, including Bitcoin, Ethereum, and many more.
 
 Currently, prices are being taken from Poloniex, a crypto asset exchange.
 Therefore, all tickers on Poloniex are able to be used in Speculator.  
@@ -14,10 +14,11 @@ Normal markets will also be added in future updates.
 ```
 python main.py
 ```
-*Yes, it is _that_ easy!*
+**Yes, it is _that_ easy!**
 
 This will display the next predicted closing price of a ticker.
-*default:* USDT to Bitcoin
+
+**default:** USDT to Bitcoin
 
 Use the `--help` flag for a complete list of optional arguments.
 
