@@ -12,7 +12,7 @@ Normal markets will also be added in future updates.
 
 ## Getting Started
 ```
-python main.py
+python speculator/main.py
 ```
 **Yes, it is _that_ easy!**
 
