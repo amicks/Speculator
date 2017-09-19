@@ -1,7 +1,7 @@
 Speculator [![travis build](https://img.shields.io/travis/AllstonMickey/Speculator.svg)](://travis-ci.org/AllstonMickey/Speculator)
 ==========
 <p align="center">
-  <img width="1750" height="500" src="https://i.cubeupload.com/sfy2x2.png">
+  <img src="https://i.cubeupload.com/sfy2x2.png">
 </p>
 
 Speculator predicts the next 'closing' price for cryptocurrencies, including Bitcoin, Ethereum, and many more.
