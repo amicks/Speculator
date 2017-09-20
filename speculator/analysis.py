@@ -9,6 +9,9 @@ from speculator.features import so
 from speculator.utils import date
 from speculator.utils import poloniex
 
+#Enum-like object with 1:1 mapping.  Converts a readable
+# market trend like 'bearish' to an int that is easier to parse.
+TARGET_CODES = {'bearish': -1, 'neutral': 0, 'bullish': 1}
 
 class Market(object):
     """ Evaluates TA indicators of a market
@@ -98,7 +101,6 @@ class RandomForest(RandomForestClassifier):
     All other attributes and functions are defined
     within sklearn's RandomForestClassifier class.
     """
-
     def __init__(self, market, **kwargs):
         """ Inits a Random Forest Classifier with a market attribute
 
@@ -106,6 +108,7 @@ class RandomForest(RandomForestClassifier):
             market: Pandas DataFrame with columns as market features,
                 and rows as dates or entries.  The first row is the
                 earliest date and the last row is closer to the present.
+            **kwargs: Arguments for scikit-learn's RandomForestClassifier
         """
         super().__init__(**kwargs)
         self.market = market
@@ -120,7 +123,6 @@ class RandomForest(RandomForestClassifier):
                 delta / 2 is equivalent to either the positive or negative
                 threshold of the neutral price zone.
         """
-        TARGET_NAMES = {'bearish': -1, 'neutral': 0, 'bullish': 1}
         targets = [] # Keep track of targets
         for row, _ in self.market.iterrows():
             if row == self.market.shape[0] - 1: # Can't predict yet, done.
@@ -134,11 +136,11 @@ class RandomForest(RandomForestClassifier):
 
             # Get target
             if curr_close < low_close:
-                target = TARGET_NAMES['bearish']
+                target = TARGET_CODES['bearish']
             elif curr_close > high_close:
-                target = TARGET_NAMES['bullish']
+                target = TARGET_CODES['bullish']
             else:
-                target = TARGET_NAMES['neutral']
+                target = TARGET_CODES['neutral']
             targets.append(target)
 
         # Convert targets to DF and merge with the self.market DF
@@ -174,6 +176,29 @@ class RandomForest(RandomForestClassifier):
         """ Return list of features and their importance in classification """
         feature_names = [name for name in self.market]
         return list(zip(feature_names, self.feature_importances_))
+        
+    def predict_next_trend(self, proba=False, log=False):
+        """ Predicts the next market trend
+
+        *** RandomForest must be trained! ***
+
+        Returns:
+            List of predicted classes.
+            Index 0: Trend
+            Index 1: Probability
+            Index 2: Log Probability
+        """
+        # The date to predict is the last row in the dataframe
+        # Target was set to None when we trained the model, so drop it.
+        today = self.market.tail(1).drop('target', axis=1)
+
+        preds = [self.predict(today)[0]]
+        if proba:
+            preds.append(self.predict_proba(today))
+        if log:
+            preds.append(self.predict_log_proba(today))
+        return preds
+
 
 def get_features(json):
     """ Gets technical analysis features from market data JSONs
@@ -190,38 +215,90 @@ def get_features(json):
             'rsi'      : rsi.from_poloniex(json),
             'so'       : so.from_poloniex(json)} 
 
-def main():
-    m = Market('USDT_BTC')
+def setup_model(market, partition, delta, use_long, **kwargs):
+    """ Converts a market to a trained Random Forest
 
-    # Create two DataFrames, short and long partition times
-    ptn_short = 14
-    ptn_long = 28
-    df_short = m.dataframe(ptn_short)
-    df_long = m.dataframe(ptn_long)
+    Args:
+        market: Market instance to feed to Random Forest
+        partition: Int of how many dates to take into consideration
+            when evaluating technical analysis indicators.
+        delta: Positive number defining a price buffer between what is
+            classified as a bullish/bearish market for the training set.
+            delta is equivalent to the total size of the neutral price zone.
+            delta / 2 is equivalent to either the positive or negative
+            threshold of the neutral price zone.
+        use_long: Bool, includes features from a longer partition in
+            addition to the normal partition size.  Example:
+            A 14 day SMA would also include a 28 day SMA if use_long is True.
+        **kwargs: Arguments for scikit-learn's RandomForestClassifier
+    """
+    df = market.dataframe(partition)
+
+    if use_long:
+        # Create longer dataframe, update column names to avoid conflicts
+        df_long = market.dataframe(partition * 2)
+        df_long.columns = ['long_{0}'.format(c) for c in df_long.columns]
+
+        # Merge the two DataFrames
+        skip = partition
+        df = pd.concat([df[skip:].reset_index(drop=True), df_long], axis=1)
     
-    # Update column names to avoid conflicts
-    df_long.columns = ['long_{0}'.format(c) for c in df_long.columns]
-
-    # Merge the two DataFrames
-    df = pd.concat([df_short[14:].reset_index(drop=True), df_long], axis=1)
-
     # Feed the DataFrame to a Random Forest Classifier
-    rf = RandomForest(df, random_state=SEED, oob_score=True)
-    rf.set_training_targets(25)
+    rf = RandomForest(df, **kwargs)
+    rf.set_training_targets(delta)
     rf.split_sets(random_state=SEED)
     rf.train()
+    return rf
+
+def target_code_to_name(code):
+    """ Converts an int target code to a target name
     
-    # Get the predictions and accuracies
-    pred = rf.predict(rf.axes['features']['test'])
+    Since self.TARGET_CODES is a 1:1 mapping, perform a reverse lookup
+    to get the more readable name.
+
+    Args:
+        code: Value from self.TARGET_CODES
+
+    Returns:
+        String target name corresponding to the given code.
+    """
+    TARGET_NAMES = {v: k for k, v in TARGET_CODES.items()}
+    return TARGET_NAMES[code]
+
+def main():
+    m = Market(SYMBOL)
+    rf = setup_model(m, PARTITION, DELTA, USE_LONG,
+                     random_state=SEED, oob_score=False)
+    
+    print('###################')
+    print('# TEST SET        #')
+    print('###################')
+    # Get the prediction
+    pred_test = rf.predict(rf.axes['features']['test'])
+
+    # Get statistics about model and prediction
     print('Accuracy Score: {0:.3f}%'.format(
-           100 * accuracy_score(rf.axes['targets']['test'], pred)))
-    print('OOB: {0:.3f}%'.format(100 * rf.oob_score_))
+           100 * accuracy_score(rf.axes['targets']['test'], pred_test)))
     print('\nConfusion Matrix:')
-    print(rf.confusion_matrix(rf.axes['targets']['test'], pred))
+    print(rf.confusion_matrix(rf.axes['targets']['test'], pred_test))
+    print(TARGET_CODES)
     print('\nFeature Importance:')
     print(rf.feature_importances())
 
+    print()
+    print('###################')
+    print('# PREDICTED TREND #')
+    print('###################')
+    pred_today = rf.predict_next_trend(proba=True, log=True)
+    print('Trend: {0}'.format(target_code_to_name(pred_today[0])))
+    print('Probabilities: {0}'.format(pred_today[1]))
+    print('Log Probabilities: {0}'.format(pred_today[2]))
+
 if __name__=='__main__':
-    SEED = 1
+    PARTITION = 14
+    DELTA = 25
+    USE_LONG = True
+    SYMBOL = 'USDT_BTC'
+    SEED = 2
     pd.options.display.width=150
     raise SystemExit(main())
