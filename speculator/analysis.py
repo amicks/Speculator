@@ -192,11 +192,11 @@ class RandomForest(RandomForestClassifier):
         # Target was set to None when we trained the model, so drop it.
         today = self.market.tail(1).drop('target', axis=1)
 
-        preds = [self.predict(today)[0]]
+        preds = {'pred': self.predict(today)[0]}
         if proba:
-            preds.append(self.predict_proba(today))
+            preds['proba'] = self.predict_proba(today)
         if log:
-            preds.append(self.predict_log_proba(today))
+            preds['log'] = self.predict_log_proba(today)
         return preds
 
 
@@ -246,7 +246,7 @@ def setup_model(market, partition, delta, use_long, **kwargs):
     # Feed the DataFrame to a Random Forest Classifier
     rf = RandomForest(df, **kwargs)
     rf.set_training_targets(delta)
-    rf.split_sets(random_state=SEED)
+    rf.split_sets(random_state=kwargs['random_state'])
     rf.train()
     return rf
 
@@ -290,9 +290,9 @@ def main():
     print('# PREDICTED TREND #')
     print('###################')
     pred_today = rf.predict_next_trend(proba=True, log=True)
-    print('Trend: {0}'.format(target_code_to_name(pred_today[0])))
-    print('Probabilities: {0}'.format(pred_today[1]))
-    print('Log Probabilities: {0}'.format(pred_today[2]))
+    print('Trend: {0}'.format(target_code_to_name(pred_today['pred'])))
+    print('Probabilities: {0}'.format(pred_today['proba']))
+    print('Log Probabilities: {0}'.format(pred_today['log']))
 
 if __name__=='__main__':
     PARTITION = 14
