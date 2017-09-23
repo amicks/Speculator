@@ -2,7 +2,7 @@ import argparse
 from datetime import datetime as dt
 import pandas as pd
 from sklearn.metrics import accuracy_score
-from speculator import analysis
+from speculator import market
 from speculator.features import rsi
 from speculator.features import so
 from speculator.features import sma
@@ -17,6 +17,8 @@ def get_args():
     today = dt.now()
     parser = argparse.ArgumentParser(
                         description='Predict the next crypto market trend.')
+    parser.add_argument('-m', '--model', default='random_forest',
+                        help=('Machine learning model to use on market data'))
     parser.add_argument('-u', '--unit', default='month',
                         help=('Time unit to go back: '
                               'second, minute, hour, day, week, month, year'))
@@ -57,37 +59,49 @@ def get_args():
 def main():
     args = get_args()
 
-    m = analysis.Market(args.symbol, unit=args.unit,
-                        count=args.count, period=args.period)
-    rf = analysis.setup_model(m, args.partition, args.delta, args.long,
-                              n_jobs=args.jobs, n_estimators=args.trees,
-                              random_state=args.seed)
-    
-    print('###################')
-    print('# TEST SET        #')
-    print('###################')
-    # Get the prediction
-    pred_test = rf.predict(rf.axes['features']['test'])
+    m = market.Market(symbol=args.symbol, unit=args.unit,
+                      count=args.count, period=args.period)
+    x = m.features(partition=args.partition)
+    y = market.targets(x, delta=args.delta)
+    model = market.setup_model(x[:-1], y,
+                               model_type=args.model,
+                               seed=args.seed,
+                               n_estimators=args.trees,
+                               n_jobs=args.jobs)
 
-    # Get statistics about model and prediction
-    print('Accuracy Score: {0:.3f}%'.format(
-           100 * accuracy_score(rf.axes['targets']['test'], pred_test)))
+    # Predict the target test set from the features test set
+    pred = model.predict(model.features.test)
+
+    # Get accuracies
+    ftr_imps = model.feature_importances()
+    conf_mx = model.confusion_matrix(model.targets.test, pred)
+    acc = model.accuracy(model.targets.test, pred)
+
+    # Display accuracies
+    print('##################')
+    print('# TEST SET       #')
+    print('##################')
+    print('Accuracy: {0:.3f}%'.format(100 * acc))
     print('\nConfusion Matrix:')
-    print(rf.confusion_matrix(rf.axes['targets']['test'], pred_test))
-    print(analysis.TARGET_CODES)
+    print(conf_mx)
+    print(market.TARGET_CODES)
     print('\nFeature Importance:')
-    print(rf.feature_importances())
+    for ftr, imp in ftr_imps:
+        print('  {0}: {1:.3f}%'.format(ftr, 100 * imp))
 
     print()
-    print('###################')
-    print('# PREDICTED TREND #')
-    print('###################')
-    pred_today = rf.predict_next_trend(proba=args.proba, log=args.proba_log)
-    print('Trend: {0}'.format(analysis.target_code_to_name(pred_today['pred'])))
+
+    # Display prediction and probabilities for the next trend
+    print('##################')
+    print('# PREDICTED NEXT #')
+    print('##################')
+    next_date = x.tail(1) # Remember the entry we didn't train?  Predict it.
+    trend = market.target_code_to_name(model.predict(next_date)[0])
+    print('Trend: {0}'.format(trend))
     if args.proba:
-        print('Probabilities: {0}'.format(pred_today['proba']))
+        print('Probability: {0}'.format(model.predict_proba(next_date)))
     if args.proba_log:
-        print('Log Probabilities: {0}'.format(pred_today['log']))
+        print('Log Probability: {0}'.format(model.predict_log_proba(next_date)))
 
 if __name__=='__main__':
     raise SystemExit(main())
