@@ -24,7 +24,7 @@ Use the `--help` flag for a complete list of optional arguments.
 
 **Example usage with arguments:**
 <p align="center">
-  <img src="https://i.cubeupload.com/c1Plfp.png">
+  <img src="http://i.cubeupload.com/WMiNJC.png">
 </p>
 
 A GUI will be designed to make this more user friendly, for both argument selection and results of the prediction.
