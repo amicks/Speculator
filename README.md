@@ -11,7 +11,7 @@ Therefore, all tickers on Poloniex are able to be used in Speculator.
 Normal markets will also be added in future updates.
 
 ## How to get started
-```
+``` bash
 git clone https://github.com/AllstonMickey/Speculator.git
 cd Speculator/speculator
 python main.py
@@ -45,9 +45,16 @@ A GUI will be designed to make this more user friendly, for both argument select
 
 ### Dependencies
 Make sure these packages are installed before running Speculator:
-* [Delorean](http://delorean.readthedocs.io/en/latest/install.html), ` pip install delorean `
-* [scikit-learn](http://scikit-learn.org/stable/install.html), ` pip install scikit-learn `
-* [pandas](https://pandas.pydata.org/pandas-docs/stable/install.html), ` pip install pandas `
+* [Delorean](http://delorean.readthedocs.io/en/latest/install.html), `pip3 install delorean`
+* [requests](http://docs.python-requests.org/en/latest/user/install/#install) `pip3 install requests`
+* [NumPy](https://www.scipy.org/install.html), `pip3 install numpy`
+* [scikit-learn](http://scikit-learn.org/stable/install.html), `pip3 install scikit-learn`
+* [pandas](https://pandas.pydata.org/pandas-docs/stable/install.html), `pip3 install pandas`
+
+Or just use a one-liner:
+``` bash
+pip3 install delorean requests numpy scikit-learn pandas
+```
 
 ## Contact for Feedback, Questions, or Issues
 Feel free to send me a message on Reddit at [/u/shneap](https://www.reddit.com/message/compose?to=shneap).  I am happy to hear any concerns, good or bad, in order to progress the development of this project.
