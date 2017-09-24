@@ -29,6 +29,7 @@ Use the `--help` flag for a complete list of optional arguments.
 
 A GUI will be designed to make this more user friendly, for both argument selection and results of the prediction.
 
+If you want to use or thoroughly understand Speculator's API, I recommend checking out the [examples package](speculator/examples/)
 
 ### Project Structure
 `docs/` Documentation overview for packages, modules, and others.
@@ -37,9 +38,13 @@ A GUI will be designed to make this more user friendly, for both argument select
 
 `speculator/main.py`  Main file to run Speculator with arguments.  Predicts the next trend of a ticker like USDT to BTC.
 
-`speculator/analysis.py`  Module with market technical analysis features and their application to a machine learning model.
+`speculator/market.py`  Module with market technical analysis features and their setup to a machine learning model.
 
-`speculator/features/`  Package of market technical analysis features
+`speculator/models/` Package of machine learning models.
+
+`speculator/examples/`  Package of python script examples of Speculator's API and their related documentation/walkthrough/how-to. **This is important to understand Speculator's API**
+
+`speculator/features/`  Package of market technical analysis indicators.
 
 `speculator/utils/` Package with modules for basic functions like getting market data from an API or converting dates to epochs.
 
