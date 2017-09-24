@@ -36,18 +36,7 @@ class Market(object):
     """
 
     def __init__(self, symbol='USDT_BTC', unit='month', count=6, period=86400):
-        """ Inits market class with data going back count units
-        
-        Args:
-            symbol: String of currency pair, like a ticker symbol.
-            unit: String of time period unit for count argument.
-                How far back to check historical market data.
-                valid values: 'hour', 'day', 'week', 'month', 'year'
-            count: Int of units.
-                How far back to check historical market data.
-            period: Int defining width of each chart candlestick in seconds.
-                Valid values: 300, 900, 1800, 7200, 14400, 86400.
-        """
+        """ Inits market class of symbol with data going back count units """
         self.symbol = symbol 
         self.unit = unit
         self.count = count
@@ -71,7 +60,7 @@ class Market(object):
                 when evaluating technical analysis indicators.
 
         Returns:
-            Pandas DataFrame instance with columns as features.
+            Pandas DataFrame instance with columns as numpy.float32 features.
         """
         data = []
         for offset in range(len(self.json) - partition):
@@ -79,24 +68,28 @@ class Market(object):
             data.append(eval_features(json))
         return pd.DataFrame(data=data, dtype=np.float32)
 
-def targets(features, delta=10):
+def targets(x, delta=10):
     """ Sets target market trend for a date
 
     Args:
+        x: Pandas DataFrame of market features
         delta: Positive number defining a price buffer between what is
             classified as a bullish/bearish market for the training set.
             delta is equivalent to the total size of the neutral price zone.
             delta / 2 is equivalent to either the positive or negative
             threshold of the neutral price zone.
+
+    Returns:
+        Pandas Series of numpy int8 market trend targets
     """
     data = [] # Keep track of targets
-    for row, _ in features.iterrows():
-        if row == features.shape[0] - 1: # Can't predict yet, done.
+    for row, _ in x.iterrows():
+        if row == x.shape[0] - 1: # Can't predict yet, done.
             break
 
         # Get closing prices
-        curr_close = features.close[row]
-        next_close = features.close[row + 1]
+        curr_close = x.close[row]
+        next_close = x.close[row + 1]
         high_close = next_close + (delta / 2) # Pos. neutral zone threshold
         low_close = next_close - (delta / 2)  # Neg. neutral zone threshold
 
@@ -142,6 +135,19 @@ def target_code_to_name(code):
     return TARGET_NAMES[code]
 
 def setup_model(x, y, model_type='random_forest', seed=None, **kwargs):
+    """ Initializes a machine learning model
+
+    Args:
+        x: Pandas DataFrame, X axis of features
+        y: Pandas Series, Y axis of targets
+        model_type: Machine Learning model to use
+            Valid values: 'random_forest'
+        seed: Random state to use when splitting sets and creating the model
+        **kwargs: Scikit Learn's RandomForestClassifier kwargs
+    
+    Returns:
+        Trained model instance of model_type
+    """
     sets = namedtuple('Datasets', ['train', 'test'])
     x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=seed)
     x = sets(x_train, x_test)
