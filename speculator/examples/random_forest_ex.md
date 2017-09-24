@@ -11,12 +11,13 @@ We can break up the process of classifying market data with a random forest in s
 **Let's follow that process line-by-line in random\_forest\_ex.py.**
 
 ## Gather data
-We must first create a sp.market.Market object.
+We must first create a sp.market.Market object.  These values are used for getting the JSON from [Poloniex's API](https://poloniex.com/support/api/)
 This takes 4 keyword arguments:
-* symbol: Ticker from Poloniex API
+* symbol: [Ticker from Poloniex API](https://poloniex.com/public?command=returnTicker)
 * unit: Unit of time to check history ('hour', 'day', 'week', 'month', or 'year')
 * count: Number of units to check history
 * period: Seconds per chart candlesticks (300, 900, 1800, 7200, 14400, or 86400)
+
 Returns: Market instance
 ``` python
 m = market.Market(symbol='USDT_BTC', unit='month', count=6, period=86400)
@@ -31,7 +32,11 @@ The Market interface makes this extremely simple.
 
 We can get evaluate the features of our raw dataset by using the features function of a Market object.
 The features function takes 1 keyword argument:
-* partition: How many dates to consider when evaluating technical analysis indicators [tmp](tmp)
+* partition: How many dates to consider when evaluating technical analysis indicators
+<p align="center">
+  <img src="http://i.cubeupload.com/osMGQ1.png">
+</p>
+
 Returns: Pandas DataFrame of market features.  Each value is a numpy.float32.
 ``` python
 x = m.features(partition=14)
@@ -43,7 +48,11 @@ With the features, we can evaluate the target market trend as bearish, neutral, 
 The targets function takes 1 positional argument:
 * x: Pandas DataFrame x axis (market features)
 It also takes 1 keyword argument:
-* delta: Buffer for the neutral market trend zone [tmp](tmp)
+* delta: Buffer for the neutral market trend zone
+<p align="center">
+  <img src="https://i.cubeupload.com/K74Iur.png">
+</p>
+
 Returns: Pandas Series for target market trends of `features`.  Each value is a numpy.int8 code for a string market trend defined by a 1:1 mapping in market.TARGET\_CODES
 ``` python
 y = market.targets(x, delta=25)
@@ -63,6 +72,7 @@ It also takes a variable amount of keyword arguments.  Most are defined by Sciki
 However, there are some specific to Speculator's API:
 * model\_type: Machine learning model to use ('random\_forest')
 * seed: Random state to produce consistent results.  Default is None, and behaves as if there was no seed.
+
 Returns: Trained model instance of `model\_type`
 ``` python
 model = market.setup_model(x[:-1], y, model_type='random_forest', seed=1,
@@ -74,13 +84,14 @@ Therefore, the last target could not be predicted, causing the targets to be 1 l
 To fix this, we slice the x DataFrame to align with the y Series.
 
 We use seed=1 for consistency in the example, but this should not be used if actually trying to predict multiple times.
-`n_estimators=65` and `n_jobs=4` are keyword arguments for [Scikit Learn's RandomForestClassifier](tmp).  The values we supplied tells the model to use 65 trees in the forest, and use 4 CPU threads.  This allows the model to be more accurate while simultaneously running faster.
+`n_estimators=65` and `n_jobs=4` are keyword arguments for [Scikit Learn's RandomForestClassifier](http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html).  The values we supplied tells the model to use 65 trees in the forest, and use 4 CPU threads.  This allows the model to be more accurate while simultaneously running faster.
 
 ## Predict a target
 The model is built, trained, and now ready to predict.  Simply use the predict function on any x axis (feature data set) and the predictions will be returned.
 
 The predict function takes 1 positional argument:
 * x: Pandas DataFrame axis of features
+
 Returns: List of predictions
 
 We'll start by trying our model on our test set
