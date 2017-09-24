@@ -74,10 +74,12 @@ def main():
     y = market.targets(x, delta=args.delta)
     x = x.drop(['close'], axis=1)
     model = market.setup_model(x[:-1], y,
-                               model_type=args.model,
+                               model_type=args.model.lower(),
                                seed=args.seed,
                                n_estimators=args.trees,
                                n_jobs=args.jobs)
+
+    return 0 # Testing the setup of DNN model, will remove later
 
     # Predict the target test set from the features test set
     pred = model.predict(model.features.test)

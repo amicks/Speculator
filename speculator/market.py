@@ -7,12 +7,13 @@ from speculator.features import rsi
 from speculator.features import sma
 from speculator.features import so
 import speculator.models.random_forest as rf
+import speculator.models.deep_neural_network as dnn
 from speculator.utils import date
 from speculator.utils import poloniex
 
 #Enum-like object with 1:1 mapping.  Converts a readable
 # market trend like 'bearish' to an int that is easier to parse.
-TARGET_CODES = {'bearish': -1, 'neutral': 0, 'bullish': 1}
+TARGET_CODES = {'bearish': 0, 'neutral': 1, 'bullish': 2}
 
 class Market(object):
     """ Evaluates TA indicators of a market
@@ -102,7 +103,7 @@ def targets(x, delta=10):
             target = TARGET_CODES['neutral']
         data.append(target)
 
-    return pd.Series(data=data, dtype=np.int8, name='target')
+    return pd.Series(data=data, dtype=np.int32, name='target')
 
 def eval_features(json):
     """ Gets technical analysis features from market data JSONs
@@ -149,12 +150,14 @@ def setup_model(x, y, model_type='random_forest', seed=None, **kwargs):
         Trained model instance of model_type
     """
     sets = namedtuple('Datasets', ['train', 'test'])
-    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=seed)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=seed, shuffle=False)
     x = sets(x_train, x_test)
     y = sets(y_train, y_test)
 
-    if model_type == 'random_forest':
+    if model_type == 'random_forest' or model_type == 'rf':
         model = rf.RandomForest(x, y, random_state=seed, **kwargs)
+    elif model_type == 'deep_neural_network' or model_type == 'dnn':
+        model = dnn.DeepNeuralNetwork(x, y, **kwargs)
     else:
         raise ValueError('Invalid model type kwarg')
     return model
