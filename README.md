@@ -1,4 +1,4 @@
-Speculator [![travis build](https://img.shields.io/travis/AllstonMickey/Speculator.svg)](://travis-ci.org/AllstonMickey/Speculator) [![python version](https://img.shields.io/pypi/pyversions/Speculator.svg)] [![license](https://img.shields.io/pypi/l/Speculator.svg)](https://github.com/AllstonMickey/Speculator/blob/master/LICENSE) [![tag](https://img.shields.io/github/tag/allstonmickey/speculator.svg)](https://github.com/AllstonMickey/Speculator/archive/0.1.tar.gz) [![status](https://img.shields.io/pypi/status/Speculator.svg)]
+Speculator [![travis build](https://img.shields.io/travis/AllstonMickey/Speculator.svg)](://travis-ci.org/AllstonMickey/Speculator) [python version](https://img.shields.io/pypi/pyversions/Speculator.svg) [![license](https://img.shields.io/pypi/l/Speculator.svg)](https://github.com/AllstonMickey/Speculator/blob/master/LICENSE) [![tag](https://img.shields.io/github/tag/allstonmickey/speculator.svg)](https://github.com/AllstonMickey/Speculator/archive/0.1.tar.gz) [status](https://img.shields.io/pypi/status/Speculator.svg)
 ==========
 <p align="center">
   <img src="https://i.cubeupload.com/eAerFa.png">
