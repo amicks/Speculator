@@ -1,13 +1,7 @@
 import argparse
 from datetime import datetime as dt
 import pandas as pd
-from sklearn.metrics import accuracy_score
 from speculator import market
-from speculator.features import rsi
-from speculator.features import so
-from speculator.features import sma
-from speculator.utils import date
-from speculator.utils import poloniex
 
 """
 Predicts the next market trend based on the markets history
@@ -38,8 +32,8 @@ def get_args():
                         help=('Random state seed to be used when generating '
                               'the Random Forest and training/test sets'))
     parser.add_argument('-l', '--long', nargs='*',
-                        help=('Enable longer feature calculations.  Example: '
-                              'A 14 day SMA would also include a 28 day SMA'))
+                        help=('List of features to enable longer calculations. '
+                              'Example "--long rsi": 14 day RSI -> 28 day RSI'))
     parser.add_argument('-d', '--delta', default=25, type=int,
                         help=('Price buffer in the neutral zone before'
                               'classifying a trend as bullish or bearish'))
