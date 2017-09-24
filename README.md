@@ -1,4 +1,4 @@
-Speculator [![travis build](https://img.shields.io/travis/AllstonMickey/Speculator.svg)](://travis-ci.org/AllstonMickey/Speculator)
+Speculator [![travis build](https://img.shields.io/travis/AllstonMickey/Speculator.svg)](://travis-ci.org/AllstonMickey/Speculator) [![python version](https://img.shields.io/pypi/pyversions/Speculator.svg)] [![license](https://img.shields.io/pypi/l/Speculator.svg)](https://github.com/AllstonMickey/Speculator/blob/master/LICENSE) [![tag](https://img.shields.io/github/tag/allstonmickey/speculator.svg)](https://github.com/AllstonMickey/Speculator/archive/0.1.tar.gz) [![status](https://img.shields.io/pypi/status/Speculator.svg)]
 ==========
 <p align="center">
   <img src="https://i.cubeupload.com/eAerFa.png">
@@ -29,7 +29,13 @@ Use the `--help` flag for a complete list of optional arguments.
 
 A GUI will be designed to make this more user friendly, for both argument selection and results of the prediction.
 
-If you want to use or thoroughly understand Speculator's API, I recommend checking out the [examples package](speculator/examples/)
+### API
+Speculator is available on PyPi as of 09/24/17.  Run:
+```
+pip3 install speculator
+```
+
+If you want to use or thoroughly understand Speculator's API, I recommend checking out the [examples package](speculator/examples/) and the [docs](docs/)
 
 ### Project Structure
 `docs/` Documentation overview for packages, modules, and others.
