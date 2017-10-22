@@ -34,9 +34,14 @@ class DeepNeuralNetwork(tf.estimator.DNNClassifier):
                                                    shuffle=shuffle,
                                                    **kwargs)
 
-    def accuracy(self):
-        input_fn = self.get_input_fn(self.features.test, y=self.targets.test)
-        return self.evaluate(input_fn)
+    def accuracy(self, x=None, y=None):
+        if x is None:
+            x = self.features.test
+        if y is None:
+            y = self.targets.test
+
+        input_fn = self.get_input_fn(x, y=y)
+        return self.evaluate(input_fn)['accuracy']
 
     def _predict(self, x, y=None):
         input_fn = self.get_input_fn(x, y=y)
@@ -46,4 +51,14 @@ class DeepNeuralNetwork(tf.estimator.DNNClassifier):
         # Interested in classes key, convert "b'$trend'" value to int
         return [int(p['classes'][0]) for p in pred]
         
+    def _predict_log_proba(self, x, y=None):
+        input_fn = self.get_input_fn(x, y=y)
+        # TF returns a dict generator, convert to list
+        pred = list(self.predict(input_fn=input_fn))
+        return [list(p['logits']) for p in pred]
 
+    def _predict_proba(self, x, y=None):
+        input_fn = self.get_input_fn(x, y=y)
+        # TF returns a dict generator, convert to list
+        pred = list(self.predict(input_fn=input_fn))
+        return [list(p['probabilities']) for p in pred]
