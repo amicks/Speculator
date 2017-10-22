@@ -150,7 +150,10 @@ def setup_model(x, y, model_type='random_forest', seed=None, **kwargs):
         Trained model instance of model_type
     """
     sets = namedtuple('Datasets', ['train', 'test'])
-    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=seed, shuffle=False)
+    x_train, x_test, y_train, y_test = train_test_split(x,
+                                                        y,
+                                                        random_state=seed,
+                                                        shuffle=False)
     x = sets(x_train, x_test)
     y = sets(y_train, y_test)
 

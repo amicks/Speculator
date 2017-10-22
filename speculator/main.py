@@ -2,6 +2,7 @@ import argparse
 from datetime import datetime as dt
 import pandas as pd
 from speculator import market
+from speculator import models
 
 """
 Predicts the next market trend based on the markets history
@@ -50,6 +51,12 @@ def get_args():
                               'predicted trend'))
     return parser.parse_args()
 
+def predict(model_type, x, y=None):
+    if model_type == 'random_forest' or model_type == 'rf':
+        pass
+    elif model_type == 'deep_neural_network' or model_type == 'dnn':
+        pass
+
 def main():
     args = get_args()
 
@@ -78,6 +85,18 @@ def main():
                                seed=args.seed,
                                n_estimators=args.trees,
                                n_jobs=args.jobs)
+
+    print(model.accuracy())
+    print(type(model) is models.deep_neural_network.DeepNeuralNetwork)
+    print(type(model) is models.random_forest.RandomForest)
+
+    next_date = x.tail(1) # Remember the entry we didn't train?  Predict it.
+    #trend = market.target_code_to_name(model.predict(next_date)[0])
+    #for pred in model.predict(next_date):
+    #    print(pred)
+    print(model._predict(next_date))
+    trend = market.target_code_to_name(model._predict(next_date)[0])
+    print(trend)
 
     return 0 # Testing the setup of DNN model, will remove later
 
