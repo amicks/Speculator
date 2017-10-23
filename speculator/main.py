@@ -87,49 +87,20 @@ def main():
                                n_jobs=args.jobs)
 
     next_date = x.tail(1) # Remember the entry we didn't train?  Predict it.
-    if type(model) is models.deep_neural_network.DeepNeuralNetwork:
-        trend = market.target_code_to_name(model._predict_trends(next_date)[0])
-        acc = model.accuracy(model.features.test, model.targets.test)
+
+    # TODO: Reimplement display of confusion matrix and feature importances
+    acc = model.accuracy(model.features.test, model.targets.test)
+    print('Test Set Accuracy: {0:.3f}%'.format(100 * acc))
+
+    trends = model._predict_trends(next_date)
+    print('Predicted Trend: {0}'.format(market.target_code_to_name(trends[0])))
+
+    if args.proba:
         probas = model._predict_probas(next_date)
+        print('Probability: {0}'.format(probas[0]))
+    if args.proba_log:
         logs = model._predict_logs(next_date)
-        pred_test = model._predict_trends(model.features.test)
-        print(trend)
-        print(probas)
-        print(logs)
-        print(acc)
-    elif type(model) is models.random_forest.RandomForest:
-        # Predict the target test set from the features test set
-        pred = model.predict(model.features.test)
-
-        # Get accuracies
-        ftr_imps = model.feature_importances()
-        conf_mx = model.confusion_matrix(model.targets.test, pred)
-        acc = model.accuracy(model.targets.test, pred)
-
-        # Display accuracies
-        print('##################')
-        print('# TEST SET       #')
-        print('##################')
-        print('Accuracy: {0:.3f}%'.format(100 * acc))
-        print('\nConfusion Matrix:')
-        print(conf_mx)
-        print(market.TARGET_CODES)
-        print('\nFeature Importance:')
-        for ftr, imp in ftr_imps:
-            print('  {0}: {1:.3f}%'.format(ftr, 100 * imp))
-
-        print()
-
-        # Display prediction and probabilities for the next trend
-        print('##################')
-        print('# PREDICTED NEXT #')
-        print('##################')
-        trend = market.target_code_to_name(model.predict(next_date)[0])
-        print('Trend: {0}'.format(trend))
-        if args.proba:
-            print('Probability: {0}'.format(model.predict_proba(next_date)))
-        if args.proba_log:
-            print('Log Probability: {0}'.format(model.predict_log_proba(next_date)))
+        print('Log Probability: {0}'.format(logs[0]))
 
 if __name__=='__main__':
     raise SystemExit(main())

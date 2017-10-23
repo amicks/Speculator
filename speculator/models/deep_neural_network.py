@@ -42,19 +42,17 @@ class DeepNeuralNetwork(tf.estimator.DNNClassifier):
     def _predict_trends(self, x, y=None):
         input_fn = self.get_input_fn(x, y=y)
         # TF returns a dict generator, convert to list
-        pred = list(self.predict(input_fn=input_fn))
-
-        # Interested in classes key, convert "b'$trend'" value to int
-        return [int(p['classes'][0]) for p in pred]
+        preds = list(self.predict(input_fn=input_fn))
+        return [int(p['class_ids'][0]) for p in preds]
         
     def _predict_logs(self, x, y=None):
         input_fn = self.get_input_fn(x, y=y)
         # TF returns a dict generator, convert to list
-        pred = list(self.predict(input_fn=input_fn))
-        return [list(p['logits']) for p in pred]
+        preds = list(self.predict(input_fn=input_fn))
+        return [list(p['logits']) for p in preds]
 
     def _predict_probas(self, x, y=None):
         input_fn = self.get_input_fn(x, y=y)
         # TF returns a dict generator, convert to list
-        pred = list(self.predict(input_fn=input_fn))
-        return [list(p['probabilities']) for p in pred]
+        preds = list(self.predict(input_fn=input_fn))
+        return [list(p['probabilities']) for p in preds]
