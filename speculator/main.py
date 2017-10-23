@@ -2,6 +2,7 @@ import argparse
 from datetime import datetime as dt
 import pandas as pd
 from speculator import market
+from speculator import models
 
 """
 Predicts the next market trend based on the markets history
@@ -50,6 +51,12 @@ def get_args():
                               'predicted trend'))
     return parser.parse_args()
 
+def predict(model_type, x, y=None):
+    if model_type == 'random_forest' or model_type == 'rf':
+        pass
+    elif model_type == 'deep_neural_network' or model_type == 'dnn':
+        pass
+
 def main():
     args = get_args()
 
@@ -74,44 +81,26 @@ def main():
     y = market.targets(x, delta=args.delta)
     x = x.drop(['close'], axis=1)
     model = market.setup_model(x[:-1], y,
-                               model_type=args.model,
+                               model_type=args.model.lower(),
                                seed=args.seed,
                                n_estimators=args.trees,
                                n_jobs=args.jobs)
 
-    # Predict the target test set from the features test set
-    pred = model.predict(model.features.test)
-
-    # Get accuracies
-    ftr_imps = model.feature_importances()
-    conf_mx = model.confusion_matrix(model.targets.test, pred)
-    acc = model.accuracy(model.targets.test, pred)
-
-    # Display accuracies
-    print('##################')
-    print('# TEST SET       #')
-    print('##################')
-    print('Accuracy: {0:.3f}%'.format(100 * acc))
-    print('\nConfusion Matrix:')
-    print(conf_mx)
-    print(market.TARGET_CODES)
-    print('\nFeature Importance:')
-    for ftr, imp in ftr_imps:
-        print('  {0}: {1:.3f}%'.format(ftr, 100 * imp))
-
-    print()
-
-    # Display prediction and probabilities for the next trend
-    print('##################')
-    print('# PREDICTED NEXT #')
-    print('##################')
     next_date = x.tail(1) # Remember the entry we didn't train?  Predict it.
-    trend = market.target_code_to_name(model.predict(next_date)[0])
-    print('Trend: {0}'.format(trend))
+
+    # TODO: Reimplement display of confusion matrix and feature importances
+    acc = model.accuracy(model.features.test, model.targets.test)
+    print('Test Set Accuracy: {0:.3f}%'.format(100 * acc))
+
+    trends = model._predict_trends(next_date)
+    print('Predicted Trend: {0}'.format(market.target_code_to_name(trends[0])))
+
     if args.proba:
-        print('Probability: {0}'.format(model.predict_proba(next_date)))
+        probas = model._predict_probas(next_date)
+        print('Probability: {0}'.format(probas[0]))
     if args.proba_log:
-        print('Log Probability: {0}'.format(model.predict_log_proba(next_date)))
+        logs = model._predict_logs(next_date)
+        print('Log Probability: {0}'.format(logs[0]))
 
 if __name__=='__main__':
     raise SystemExit(main())

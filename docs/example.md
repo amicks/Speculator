@@ -1,5 +1,12 @@
-# Predicting market trends with Random Forests
-The random\_forest\_ex.py file should be followed while reading this document.
+# Predicting market trends with Speculator
+The example.py file should be followed while reading this document.
+
+Speculator combines technical analysis with machine learning to predict trends.
+Each machine learning model has an identical interface, allowing you to easily
+change between models without any difficulties.
+
+For this example, we will use a random forest classifier.  Note that you could just
+replace the model type from 'rf' to 'dnn' and this example would work the exact same way.
 
 We can break up the process of classifying market data with a random forest in short steps:
 1. Gather raw data
@@ -8,7 +15,7 @@ We can break up the process of classifying market data with a random forest in s
 4. Train the random forest model by feeding our parsed data sets
 5. Predict a target
 
-**Let's follow that process line-by-line in random\_forest\_ex.py.**
+**Let's follow that process line-by-line in example.py.**
 
 ## Gather data
 We must first create a sp.market.Market object.  These values are used for getting the JSON from [Poloniex's API](https://poloniex.com/support/api/)
@@ -131,3 +138,4 @@ model.predict_log_proba(next_date)
 
 **Congratulations, you just created a RandomForest market model to predict trends in ~5 lines of code!**
 
+###### TODO: Update predict functions to match DNN branch merge.

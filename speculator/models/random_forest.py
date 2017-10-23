@@ -37,7 +37,16 @@ class RandomForest(RandomForestClassifier):
         """ Confusion matrix of actual set to predicted set """
         return crosstab(actual, preds, rownames=['(A)'], colnames=['(P)'])
 
-    def accuracy(self, actual, preds):
+    def accuracy(self, x, y):
         """ Accuracy score of actual set to predicted set """
-        return accuracy_score(actual, preds)
+        return accuracy_score(y, self._predict_trends(x))
+
+    def _predict_trends(self, *args, **kwargs):
+        return super().predict(*args, **kwargs)
+
+    def _predict_probas(self, *args, **kwargs):
+        return super().predict_proba(*args, **kwargs)
+
+    def _predict_logs(self, *args, **kwargs):
+        return super().predict_log_proba(*args, **kwargs)
 
