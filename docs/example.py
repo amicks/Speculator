@@ -9,18 +9,21 @@ x = m.features(partition=14)
 # Parse targets, y axis
 y = market.targets(x, delta=25)
 
+# Close is a useless statistic in predicting trends
+x = x.drop(['close'], axis=1)
+
 # Create the random forest model
 # The last entry doesn't have a target (can't predict yet), so skip over it
 model = market.setup_model(x[:-1], y, model_type='random_forest', seed=1,
                            n_estimators=65, n_jobs=4)
 
 # Predict the target test set from the features test set
-pred = model.predict(model.features.test)
+trends = model._predict_trends(model.features.test)
 
 # Get accuracies
 ftr_imps = model.feature_importances()
-conf_mx = model.confusion_matrix(model.targets.test, pred)
-acc = model.accuracy(model.targets.test, pred)
+conf_mx = model.confusion_matrix(model.targets.test, trends)
+acc = model.accuracy(model.features.test, model.targets.test)
 
 # Display accuracies
 print('##################')
@@ -41,8 +44,13 @@ print('##################')
 print('# PREDICTED NEXT #')
 print('##################')
 next_date = x.tail(1) # Remember the entry we didn't train?  Predict it.
-trend = market.target_code_to_name(model.predict(next_date)[0])
-print('Trend: {0}'.format(trend))
-print('Probability: {0}'.format(model.predict_proba(next_date)))
-print('Log Probability: {0}'.format(model.predict_log_proba(next_date)))
+
+trends = model._predict_trends(next_date)
+print('Predicted Trend: {0}'.format(market.target_code_to_name(trends[0])))
+
+probas = model._predict_probas(next_date)
+print('Probability: {0}'.format(probas[0]))
+
+logs = model._predict_logs(next_date)
+print('Log Probability: {0}'.format(logs[0]))
 
