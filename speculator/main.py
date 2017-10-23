@@ -86,53 +86,50 @@ def main():
                                n_estimators=args.trees,
                                n_jobs=args.jobs)
 
-    print(model.accuracy())
-    print(type(model) is models.deep_neural_network.DeepNeuralNetwork)
-    print(type(model) is models.random_forest.RandomForest)
-
     next_date = x.tail(1) # Remember the entry we didn't train?  Predict it.
-    #trend = market.target_code_to_name(model.predict(next_date)[0])
-    #for pred in model.predict(next_date):
-    #    print(pred)
-    print(model._predict(next_date))
-    trend = market.target_code_to_name(model._predict(next_date)[0])
-    print(trend)
+    if type(model) is models.deep_neural_network.DeepNeuralNetwork:
+        trend = market.target_code_to_name(model._predict_trends(next_date)[0])
+        acc = model.accuracy(model.features.test, model.targets.test)
+        probas = model._predict_probas(next_date)
+        logs = model._predict_logs(next_date)
+        pred_test = model._predict_trends(model.features.test)
+        print(trend)
+        print(probas)
+        print(logs)
+        print(acc)
+    elif type(model) is models.random_forest.RandomForest:
+        # Predict the target test set from the features test set
+        pred = model.predict(model.features.test)
 
-    return 0 # Testing the setup of DNN model, will remove later
+        # Get accuracies
+        ftr_imps = model.feature_importances()
+        conf_mx = model.confusion_matrix(model.targets.test, pred)
+        acc = model.accuracy(model.targets.test, pred)
 
-    # Predict the target test set from the features test set
-    pred = model.predict(model.features.test)
+        # Display accuracies
+        print('##################')
+        print('# TEST SET       #')
+        print('##################')
+        print('Accuracy: {0:.3f}%'.format(100 * acc))
+        print('\nConfusion Matrix:')
+        print(conf_mx)
+        print(market.TARGET_CODES)
+        print('\nFeature Importance:')
+        for ftr, imp in ftr_imps:
+            print('  {0}: {1:.3f}%'.format(ftr, 100 * imp))
 
-    # Get accuracies
-    ftr_imps = model.feature_importances()
-    conf_mx = model.confusion_matrix(model.targets.test, pred)
-    acc = model.accuracy(model.targets.test, pred)
+        print()
 
-    # Display accuracies
-    print('##################')
-    print('# TEST SET       #')
-    print('##################')
-    print('Accuracy: {0:.3f}%'.format(100 * acc))
-    print('\nConfusion Matrix:')
-    print(conf_mx)
-    print(market.TARGET_CODES)
-    print('\nFeature Importance:')
-    for ftr, imp in ftr_imps:
-        print('  {0}: {1:.3f}%'.format(ftr, 100 * imp))
-
-    print()
-
-    # Display prediction and probabilities for the next trend
-    print('##################')
-    print('# PREDICTED NEXT #')
-    print('##################')
-    next_date = x.tail(1) # Remember the entry we didn't train?  Predict it.
-    trend = market.target_code_to_name(model.predict(next_date)[0])
-    print('Trend: {0}'.format(trend))
-    if args.proba:
-        print('Probability: {0}'.format(model.predict_proba(next_date)))
-    if args.proba_log:
-        print('Log Probability: {0}'.format(model.predict_log_proba(next_date)))
+        # Display prediction and probabilities for the next trend
+        print('##################')
+        print('# PREDICTED NEXT #')
+        print('##################')
+        trend = market.target_code_to_name(model.predict(next_date)[0])
+        print('Trend: {0}'.format(trend))
+        if args.proba:
+            print('Probability: {0}'.format(model.predict_proba(next_date)))
+        if args.proba_log:
+            print('Log Probability: {0}'.format(model.predict_log_proba(next_date)))
 
 if __name__=='__main__':
     raise SystemExit(main())

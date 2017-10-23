@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from speculator import market
 import tensorflow as tf
+tf.logging.set_verbosity(tf.logging.ERROR)
 
 class DeepNeuralNetwork(tf.estimator.DNNClassifier):
     def __init__(self, features, targets, **kwargs):
@@ -34,16 +35,11 @@ class DeepNeuralNetwork(tf.estimator.DNNClassifier):
                                                    shuffle=shuffle,
                                                    **kwargs)
 
-    def accuracy(self, x=None, y=None):
-        if x is None:
-            x = self.features.test
-        if y is None:
-            y = self.targets.test
-
-        input_fn = self.get_input_fn(x, y=y)
+    def accuracy(self, x, y):
+        input_fn = self.get_input_fn(x, y)
         return self.evaluate(input_fn)['accuracy']
 
-    def _predict(self, x, y=None):
+    def _predict_trends(self, x, y=None):
         input_fn = self.get_input_fn(x, y=y)
         # TF returns a dict generator, convert to list
         pred = list(self.predict(input_fn=input_fn))
@@ -51,13 +47,13 @@ class DeepNeuralNetwork(tf.estimator.DNNClassifier):
         # Interested in classes key, convert "b'$trend'" value to int
         return [int(p['classes'][0]) for p in pred]
         
-    def _predict_log_proba(self, x, y=None):
+    def _predict_logs(self, x, y=None):
         input_fn = self.get_input_fn(x, y=y)
         # TF returns a dict generator, convert to list
         pred = list(self.predict(input_fn=input_fn))
         return [list(p['logits']) for p in pred]
 
-    def _predict_proba(self, x, y=None):
+    def _predict_probas(self, x, y=None):
         input_fn = self.get_input_fn(x, y=y)
         # TF returns a dict generator, convert to list
         pred = list(self.predict(input_fn=input_fn))
