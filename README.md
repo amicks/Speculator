@@ -2,11 +2,7 @@ Speculator [![travis build](https://img.shields.io/travis/AllstonMickey/Speculat
 ==========
 
 <p align="center">
-  <img src="https://i.imgur.com/Us2kv38.png">
-</p>
-
-<p align="center">
-  <img src="https://realpython.com/images/react.png">
+  <img src="https://i.cubeupload.com/XJOoFJ.png">
 </p>
 
 Speculator predicts the market trend for cryptocurrencies, including Bitcoin, Ethereum, and many more.
