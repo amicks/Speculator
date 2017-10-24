@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://i.cubeupload.com/xjoofj.png" width="425" height="200">
+  <img src="https://i.imgur.com/AmrHhZV.png" width="425" height="200">
 </p>
 
 [![travis build](https://img.shields.io/travis/AllstonMickey/Speculator.svg)](://travis-ci.org/AllstonMickey/Speculator)
