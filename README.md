@@ -5,6 +5,10 @@ Speculator [![travis build](https://img.shields.io/travis/AllstonMickey/Speculat
   <img src="https://i.imgur.com/Us2kv38.png">
 </p>
 
+<p align="center">
+  <img src="https://realpython.com/images/react.png">
+</p>
+
 Speculator predicts the market trend for cryptocurrencies, including Bitcoin, Ethereum, and many more.
 
 Currently, prices are being taken from Poloniex, a crypto asset exchange.
