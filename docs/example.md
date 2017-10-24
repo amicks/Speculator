@@ -94,7 +94,7 @@ We use seed=1 for consistency in the example, but this should not be used if act
 `n_estimators=65` and `n_jobs=4` are keyword arguments for [Scikit Learn's RandomForestClassifier](http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html).  The values we supplied tells the model to use 65 trees in the forest, and use 4 CPU threads.  This allows the model to be more accurate while simultaneously running faster.
 
 ## Predict a target
-The model is built, trained, and now ready to predict.  Simply use the predict function on any x axis (feature data set) and the predictions will be returned.
+The model is built, trained, and now ready to predict the trends.  Simply use the .\_predict\_trends function on any x axis (feature data set) and the predictions will be returned.
 
 The predict function takes 1 positional argument:
 * x: Pandas DataFrame axis of features
@@ -103,13 +103,13 @@ Returns: List of predictions
 
 We'll start by trying our model on our test set
 ``` python
-pred = model.predict(model.features.test)
+trends = model._predict_trends(model.features.test)
 ```
-`pred` is now a list of numpy.int8, corresponding to our market.
+`trends` is now a list of numpy.int8, corresponding to our market.
 Various representations, like the confusion matrix or accuracy score, can be returned by comparing the actual test targets to what we predicted.
 ``` python
-conf_mx = model.confusion_matrix(model.targets.test, pred)
-acc = model.accuracy(model.targets.test, pred)
+conf_mx = model.confusion_matrix(model.targets.test, trends)
+acc = model.accuracy(model.features.test, model.targets.test)
 ```
 
 Cool, so our model is trained and can predict test sets.  How about predicting the next trend?
@@ -123,19 +123,17 @@ next_date = x.tail(1)
 ```
 and predict the trend using that entry:
 ``` python
-trend = market.target_code_to_name(model.predict(next_date)[0])
+trends = model._predict_trends(next_date)
 ```
 Since the predict method returns a list, and we only predicted 1 entry, just get the value in the 0th index.
-But wait, predict returns a -1, 0, or 1.  That's not readable and user-friendly.  We only use those values for the model.  We want to display what that number means.
-The `target_code_to_name` function uses a reverse dictionary lookup to get the name corresponding to the code.  This is only possible because we defined the target codes (-1, 0, 1) as a 1:1 mapping to a name.
+But wait, predict returns a 0, 1, or 2.  That's not readable and user-friendly.  We only use those values for the model.  We want to display what that number means.
+The `market.target_code_to_name` function uses a reverse dictionary lookup to get the name corresponding to the code.  This is only possible because we defined the target codes (0, 1, 2) as a 1:1 mapping to a name.
 
 Ok, but how confident is the answer that was given?
-Scikit Learn provides neat methods for giving the probabilities of each trend:
 ``` python
-model.predict_proba(next_date)
-model.predict_log_proba(next_date)
+model._predict_probas(next_date)
+model._predict_logs(next_date) # Logarithm probabilities
 ```
 
 **Congratulations, you just created a RandomForest market model to predict trends in ~5 lines of code!**
 
-###### TODO: Update predict functions to match DNN branch merge.
