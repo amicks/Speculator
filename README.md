@@ -14,10 +14,8 @@
 
 <br/>
 
-Speculator predicts the market trend for cryptocurrencies, including Bitcoin, Ethereum, and many more.
+Speculator predicts the price trend of cryptocurrencies like Bitcoin and Ethereum.
 
-Currently, prices are being taken from Poloniex, a crypto asset exchange.
-Therefore, all tickers on Poloniex are able to be used in Speculator.  
 Normal markets will also be added in future updates.
 
 ## How to get started
@@ -28,24 +26,37 @@ python main.py
 ```
 Yes, it is _that_ easy.
 
-This will display the next predicted market trend of USDT to Bitcoin.
-
-Use the `--help` flag for a complete list of optional arguments.
+This will display the predicted market trend of USDT to Bitcoin.
 
 **Example usage with arguments:**
 <p align="center">
-  <img src="http://i.cubeupload.com/WMiNJC.png">
+  <img src="https://i.imgur.com/c6JdDWt.png" width="700" height="180">
 </p>
 
-A GUI will be designed to make this more user friendly, for both argument selection and results of the prediction.
+Use the `--help` flag for a complete list of optional arguments.
+###### Note: A website for a friendly user experience is in development
+
+### Dependencies
+Make sure these packages are installed before running Speculator:
+* [Delorean](http://delorean.readthedocs.io/en/latest/install.html), `pip3 install delorean`
+* [requests](http://docs.python-requests.org/en/latest/user/install/#install) `pip3 install requests`
+* [NumPy](https://www.scipy.org/install.html), `pip3 install numpy`
+* [TensorFlow](https://www.tensorflow.org/install/), `pip3 install tensorflow`
+* [scikit-learn](http://scikit-learn.org/stable/install.html), `pip3 install scikit-learn`
+* [pandas](https://pandas.pydata.org/pandas-docs/stable/install.html), `pip3 install pandas`
+
+Or just use a one-liner:
+``` bash
+pip3 install delorean requests numpy tensorflow scikit-learn pandas
+```
 
 ### API
-Speculator is available on PyPi as of 09/24/17.
+Speculator is available as a package on PyPi.
 ```
 pip3 install speculator
 ```
 
-If you want to use or thoroughly understand Speculator's API, I recommend checking out the [examples package](speculator/examples/) and the [docs](docs/)
+If you want to use or thoroughly understand Speculator's API, I recommend checking out the [docs](docs/), which features a fully documented example.
 
 ### Project Structure
 `docs/` Documentation overview for packages, modules, and others.
@@ -64,26 +75,9 @@ If you want to use or thoroughly understand Speculator's API, I recommend checki
 
 `speculator/utils/` Package with modules for basic functions like getting market data from an API or converting dates to epochs.
 
-### Dependencies
-Make sure these packages are installed before running Speculator:
-* [Delorean](http://delorean.readthedocs.io/en/latest/install.html), `pip3 install delorean`
-* [requests](http://docs.python-requests.org/en/latest/user/install/#install) `pip3 install requests`
-* [NumPy](https://www.scipy.org/install.html), `pip3 install numpy`
-* [scikit-learn](http://scikit-learn.org/stable/install.html), `pip3 install scikit-learn`
-* [pandas](https://pandas.pydata.org/pandas-docs/stable/install.html), `pip3 install pandas`
-
-Or just use a one-liner:
-``` bash
-pip3 install delorean requests numpy scikit-learn pandas
-```
-
 ## Contact for Feedback, Questions, or Issues
 Feel free to send me a message on Reddit at [/u/shneap](https://www.reddit.com/message/compose?to=shneap).  I am happy to hear any concerns, good or bad, in order to progress the development of this project.
-
 
 ### Contributing
 Please read the detailed [contributing doc](docs/CONTRIBUTING.md).
 
-## Basis
-Part of this project is focused on an implementation of the research paper ["Predicting the direction of stock market prices using random forest"](https://arxiv.org/pdf/1605.00003.pdf), by Luckyson Khaidem, Snehanshu Saha, and Sudeepa Roy Dey.  I hope to gain insights into the accuracy of market technical analysis combined with modern machine learning methods.
-This tool should not be used as financial advice, but serve merely as offering a display of technical analysis which may offer another perspective on any investments.
