@@ -26,9 +26,7 @@ python main.py
 ```
 Yes, it is _that_ easy.
 
-This will display the predicted market trend of USDT to Bitcoin.
-
-**Example usage with arguments:**
+**Example:**
 <p align="center">
   <img src="https://i.imgur.com/c6JdDWt.png" width="700" height="180">
 </p>
