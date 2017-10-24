@@ -27,7 +27,7 @@ python main.py
 Yes, it is _that_ easy.
 
 **Example:**
-<p align="center">
+<p>
   <img src="https://i.imgur.com/c6JdDWt.png" width="700" height="180">
 </p>
 
