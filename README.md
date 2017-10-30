@@ -6,8 +6,8 @@
 
 [![travis build](https://img.shields.io/travis/AllstonMickey/Speculator.svg)](://travis-ci.org/AllstonMickey/Speculator)
 ![python version](https://img.shields.io/pypi/pyversions/Speculator.svg)
-[![license](https://img.shields.io/pypi/l/Speculator.svg)](https://github.com/AllstonMickey/Speculator/blob/master/LICENSE)
-[![tag](https://img.shields.io/github/tag/allstonmickey/speculator.svg)](https://github.com/AllstonMickey/Speculator/archive/0.1.tar.gz)
+[![license](https://img.shields.io/pypi/l/Speculator.svg)](https://github.com/amicks/Speculator/blob/master/LICENSE)
+[![tag](https://img.shields.io/github/tag/amicks/speculator.svg)](https://github.com/amicks/Speculator/archive/0.1.tar.gz)
 ![status](https://img.shields.io/pypi/status/Speculator.svg)
 
 </div>
@@ -20,7 +20,7 @@ Normal markets will also be added in future updates.
 
 ## How to get started
 ``` bash
-git clone https://github.com/AllstonMickey/Speculator.git
+git clone https://github.com/amicks/Speculator.git
 cd Speculator/speculator
 python main.py
 ```
