@@ -100,3 +100,5 @@ Feel free to send me a message on Reddit at [/u/shneap](https://www.reddit.com/m
 ### Contributing
 Please read the detailed [contributing doc](docs/CONTRIBUTING.md).
 
+### Disclaimer
+Speculator is not to be used as financial advice or a guide for any financial investments.
