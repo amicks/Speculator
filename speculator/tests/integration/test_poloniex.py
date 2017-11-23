@@ -1,3 +1,4 @@
+from speculator.features import obv
 from speculator.features import rsi
 from speculator.features import sma
 from speculator.features import so
@@ -69,3 +70,7 @@ class PoloniexIntegrationTest(unittest.TestCase):
                                     UNIT, COUNT, PERIOD, SYMBOL)
         self.assertAlmostEqual(eval_sma, 974.808582, places=4)
 
+    def test_get_obv_poloniex(self):
+        eval_obv = obv.get_poloniex(YEAR, MONTH, DAY,
+                                    UNIT, COUNT, PERIOD, SYMBOL)
+        self.assertAlmostEqual(eval_obv, 78590.3475, places=4)
