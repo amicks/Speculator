@@ -30,8 +30,8 @@ Date | Task | Status
 09.05.17 | Simple Moving Average (SMA) algorithm & implementation | Done
 10.01.17 | Random Forest implementation | Done
 10.15.17 | Deep Neural Network implementation | Done
-11.07.17 | On Balance Volume (OBV) algorithm | 
-11.15.17 | On Balance Volume (OBV) implementation | 
+11.07.17 | On Balance Volume (OBV) algorithm | Done
+11.15.17 | On Balance Volume (OBV) implementation | Done
 12.15.17 | Website in JavaScript with React/Redux for easy GUI | In Progress
 01.01.18 | Project release 1.0 | 
 ongoing  | Add implementation for other exchanges (traditional & cryptos) | 
