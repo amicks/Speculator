@@ -72,6 +72,7 @@ speculator
     \_ main.py
     \_ market.py
     \_ features
+                \_ obv.py
                 \_ rsi.py
                 \_ sma.py
                 \_ so.py
@@ -84,6 +85,7 @@ speculator
             \_ unit
                    \_ test_date.py
                    \_ test_poloniex.py
+                   \_ test_obv.py
                    \_ test_rsi.py
                    \_ test_sma.py
                    \_ test_so.py
