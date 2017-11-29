@@ -37,7 +37,6 @@ def eval_rs(gains, losses):
 
     avg_gains = stats.avg(gains, count=count) if gains else 1
     avg_losses = stats.avg(losses,count=count) if losses else 1
-    
 
     try:
         return avg_gains / avg_losses
