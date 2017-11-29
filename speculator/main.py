@@ -51,14 +51,9 @@ def get_args():
                               'predicted trend'))
     return parser.parse_args()
 
-def predict(model_type, x, y=None):
-    if model_type == 'random_forest' or model_type == 'rf':
-        pass
-    elif model_type == 'deep_neural_network' or model_type == 'dnn':
-        pass
-
 def main():
     args = get_args()
+    assert args.partition > 0, 'The data must be partitioned!'
 
     m = market.Market(symbol=args.symbol, unit=args.unit,
                       count=args.count, period=args.period)
@@ -80,6 +75,7 @@ def main():
 
     y = market.targets(x, delta=args.delta)
     x = x.drop(['close'], axis=1)
+
     model = market.setup_model(x[:-1], y,
                                model_type=args.model.lower(),
                                seed=args.seed,

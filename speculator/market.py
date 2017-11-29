@@ -154,6 +154,8 @@ def setup_model(x, y, model_type='random_forest', seed=None, **kwargs):
     Returns:
         Trained model instance of model_type
     """
+    assert len(x) > 1 and len(y) > 1, 'Not enough data objects to train on (minimum is at least two, you have (x: {0}) and (y: {1}))'.format(len(x), len(y))
+
     sets = namedtuple('Datasets', ['train', 'test'])
     x_train, x_test, y_train, y_test = train_test_split(x,
                                                         y,
