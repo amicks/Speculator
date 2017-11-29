@@ -35,8 +35,9 @@ def eval_rs(gains, losses):
     # Number of days that the data was collected through
     count = len(gains) + len(losses)
 
-    avg_gains = stats.avg(gains, count=count)
-    avg_losses = stats.avg(losses,count=count)
+    avg_gains = stats.avg(gains, count=count) if gains else 1
+    avg_losses = stats.avg(losses,count=count) if losses else 1
+    
 
     try:
         return avg_gains / avg_losses
