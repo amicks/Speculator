@@ -64,6 +64,9 @@ class Market(object):
         Returns:
             Pandas DataFrame instance with columns as numpy.float32 features.
         """
+        if len(self.json) < partition + 1:
+            raise ValueError('Not enough dates for the specified partition size: {0}.  Try a smaller partition.'.format(partition))
+
         data = []
         for offset in range(len(self.json) - partition):
             json = self.json[offset : offset + partition]
