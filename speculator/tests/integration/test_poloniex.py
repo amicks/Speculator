@@ -1,4 +1,3 @@
-from speculator.features import rsi
 from speculator.features import so
 from speculator.utils import poloniex
 import unittest
@@ -51,11 +50,6 @@ class PoloniexIntegrationTest(unittest.TestCase):
         res = [attribute['quoteVolume'] for attribute in HTTP_RESPONSE]
         attr = 'quoteVolume'
         self.assertEqual(poloniex.get_attribute(HTTP_RESPONSE, attr), res)
-
-    def test_get_rsi_poloniex(self):
-        eval_rsi = rsi.get_poloniex(YEAR, MONTH, DAY,
-                                    UNIT, COUNT, PERIOD, SYMBOL)
-        self.assertAlmostEqual(eval_rsi, 71.888274, places=4)
 
     def test_get_stoch_osc_poloniex(self):
         eval_so = so.get_poloniex(YEAR, MONTH, DAY,

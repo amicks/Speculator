@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from speculator.features.OBV import OBV
-from speculator.features import rsi
+from speculator.features.RSI import RSI
 from speculator.features.SMA import SMA
 from speculator.features import so
 import speculator.models.random_forest as rf
@@ -121,7 +121,7 @@ def eval_features(json):
     """
     return {'close'    : json[-1]['close'],
             'sma'      : SMA.from_poloniex(json),
-            'rsi'      : rsi.from_poloniex(json),
+            'rsi'      : RSI.from_poloniex(json),
             'so'       : so.from_poloniex(json),
             'obv'      : OBV.from_poloniex(json)}
 
