@@ -3,7 +3,7 @@ from datetime import datetime as dt
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from speculator.features import obv
+from speculator.features.OBV import OBV
 from speculator.features import rsi
 from speculator.features.SMA import SMA
 from speculator.features import so
@@ -123,7 +123,7 @@ def eval_features(json):
             'sma'      : SMA.from_poloniex(json),
             'rsi'      : rsi.from_poloniex(json),
             'so'       : so.from_poloniex(json),
-            'obv'      : obv.from_poloniex(json)}
+            'obv'      : OBV.from_poloniex(json)}
 
 def target_code_to_name(code):
     """ Converts an int target code to a target name
