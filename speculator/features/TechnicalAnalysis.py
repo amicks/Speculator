@@ -2,6 +2,7 @@ import abc
 
 class TechnicalAnalysis(abc.ABC):
     """ Abstract class for calculating technical analysis indicators """
+    
     @staticmethod
     @abc.abstractmethod
     def eval_algorithm(*args, **kwargs):

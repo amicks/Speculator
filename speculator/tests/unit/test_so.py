@@ -1,4 +1,4 @@
-from speculator.features import so
+from speculator.features.SO import SO
 import unittest
 
 class SOTest(unittest.TestCase):
@@ -6,6 +6,5 @@ class SOTest(unittest.TestCase):
         closing = 127.29
         low     = 124.56
         high    = 128.43
-        self.assertAlmostEqual(so.eval_algorithm(closing, low, high),
+        self.assertAlmostEqual(SO.eval_algorithm(closing, low, high),
                                70.54, places=2)
-

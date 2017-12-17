@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from speculator.features.OBV import OBV
 from speculator.features.RSI import RSI
 from speculator.features.SMA import SMA
-from speculator.features import so
+from speculator.features.SO import SO
 import speculator.models.random_forest as rf
 import speculator.models.deep_neural_network as dnn
 from speculator.utils import date
@@ -122,7 +122,7 @@ def eval_features(json):
     return {'close'    : json[-1]['close'],
             'sma'      : SMA.from_poloniex(json),
             'rsi'      : RSI.from_poloniex(json),
-            'so'       : so.from_poloniex(json),
+            'so'       : SO.from_poloniex(json),
             'obv'      : OBV.from_poloniex(json)}
 
 def target_code_to_name(code):
