@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from speculator.features import obv
 from speculator.features import rsi
-from speculator.features import sma
+from speculator.features.SMA import SMA
 from speculator.features import so
 import speculator.models.random_forest as rf
 import speculator.models.deep_neural_network as dnn
@@ -16,9 +16,9 @@ from speculator.utils import poloniex
 # market trend like 'bearish' to an int that is easier to parse.
 TARGET_CODES = {'bearish': 0, 'neutral': 1, 'bullish': 2}
 
-class Market(object):
+class Market:
     """ Evaluates TA indicators of a market
-    
+
     Gets data from a market and then calculates technical analysis features.
     It also prepares this data to be fed into machine learning interfaces
     by creating a pandas DataFrame, and generating training/test sets
@@ -39,7 +39,7 @@ class Market(object):
 
     def __init__(self, symbol='USDT_BTC', unit='month', count=6, period=86400):
         """ Inits market class of symbol with data going back count units """
-        self.symbol = symbol 
+        self.symbol = symbol
         self.unit = unit
         self.count = count
         self.period = period
@@ -111,23 +111,23 @@ def targets(x, delta=10):
 
 def eval_features(json):
     """ Gets technical analysis features from market data JSONs
-    
+
     Args:
         json: JSON data as a list of dict dates, where the keys are
             the raw market statistics.
-    
+
     Returns:
         Dict of market features and their values
     """
     return {'close'    : json[-1]['close'],
-            'sma'      : sma.from_poloniex(json),
+            'sma'      : SMA.from_poloniex(json),
             'rsi'      : rsi.from_poloniex(json),
             'so'       : so.from_poloniex(json),
-            'obv'      : obv.from_poloniex(json)} 
+            'obv'      : obv.from_poloniex(json)}
 
 def target_code_to_name(code):
     """ Converts an int target code to a target name
-    
+
     Since self.TARGET_CODES is a 1:1 mapping, perform a reverse lookup
     to get the more readable name.
 
@@ -150,7 +150,7 @@ def setup_model(x, y, model_type='random_forest', seed=None, **kwargs):
             Valid values: 'random_forest'
         seed: Random state to use when splitting sets and creating the model
         **kwargs: Scikit Learn's RandomForestClassifier kwargs
-    
+
     Returns:
         Trained model instance of model_type
     """
@@ -171,4 +171,3 @@ def setup_model(x, y, model_type='random_forest', seed=None, **kwargs):
     else:
         raise ValueError('Invalid model type kwarg')
     return model
-

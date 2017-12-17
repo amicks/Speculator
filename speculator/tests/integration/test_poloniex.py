@@ -1,11 +1,9 @@
 from speculator.features import obv
 from speculator.features import rsi
-from speculator.features import sma
 from speculator.features import so
-from speculator.utils import date
 from speculator.utils import poloniex
 import unittest
-        
+
 # https://poloniex.com/public?command=returnChartData&currencyPair=USDT_BTC&start=1483228800&end=1483315200&period=86400
 
 EXPECTED_RESPONSE = [{'close': 999.36463982,
@@ -42,7 +40,7 @@ HTTP_RESPONSE = poloniex.chart_json(EPOCH1, EPOCH2, PERIOD, SYMBOL)[0]
 class PoloniexIntegrationTest(unittest.TestCase):
     def test_parse_changes(self):
         self.assertEqual(poloniex.parse_changes(HTTP_RESPONSE),
-                         EXPECTED_CHANGES) 
+                         EXPECTED_CHANGES)
 
     def test_get_gains_losses(self):
         res = {'gains': [g for g in EXPECTED_CHANGES if g >= 0],
@@ -53,22 +51,17 @@ class PoloniexIntegrationTest(unittest.TestCase):
     def test_get_attribute(self):
         res = [attribute['quoteVolume'] for attribute in HTTP_RESPONSE]
         attr = 'quoteVolume'
-        self.assertEqual(poloniex.get_attribute(HTTP_RESPONSE, attr), res) 
+        self.assertEqual(poloniex.get_attribute(HTTP_RESPONSE, attr), res)
 
     def test_get_rsi_poloniex(self):
         eval_rsi = rsi.get_poloniex(YEAR, MONTH, DAY,
-                                    UNIT, COUNT, PERIOD, SYMBOL) 
+                                    UNIT, COUNT, PERIOD, SYMBOL)
         self.assertAlmostEqual(eval_rsi, 71.888274, places=4)
 
     def test_get_stoch_osc_poloniex(self):
         eval_so = so.get_poloniex(YEAR, MONTH, DAY,
                                   UNIT, COUNT, PERIOD, SYMBOL)
         self.assertAlmostEqual(eval_so, 88.9532721773, places=4)
-
-    def test_get_sma_poloniex(self):
-        eval_sma = sma.get_poloniex(YEAR, MONTH, DAY,
-                                    UNIT, COUNT, PERIOD, SYMBOL)
-        self.assertAlmostEqual(eval_sma, 974.808582, places=4)
 
     def test_get_obv_poloniex(self):
         eval_obv = obv.get_poloniex(YEAR, MONTH, DAY,
