@@ -44,7 +44,7 @@ class RSI(TechnicalAnalysis):
             return avg_gains / avg_losses
 
     def eval_from_json(json):
-        """ Gets RSI from a JSON of market data
+        """ Evaluates RSI from JSON (typically Poloniex API response)
 
         Args:
             json: List of dates where each entry is a dict of raw market data.

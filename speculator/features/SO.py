@@ -31,7 +31,7 @@ class SO(TechnicalAnalysis):
             return 100 * (closing - low) / (high - low)
 
     def eval_from_json(json):
-        """ Gets SO from a JSON of market data
+        """ Evaluates SO from JSON (typically Poloniex API response)
 
         Args:
             json: List of dates where each entry is a dict of raw market data.

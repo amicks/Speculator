@@ -21,7 +21,7 @@ class SMA(TechnicalAnalysis):
         return stats.avg(closes)
 
     def eval_from_json(json):
-        """ Gets SMA from a JSON of market data
+        """ Evaluates SMA from JSON (typically Poloniex API response)
 
         Args:
             json: List of dates where each entry is a dict of raw market data.

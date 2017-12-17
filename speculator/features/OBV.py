@@ -30,7 +30,7 @@ class OBV(TechnicalAnalysis):
         return prev['obv'] + v
 
     def eval_from_json(json):
-        """ Gets OBV from a JSON of market data
+        """ Evaluates OBV from JSON (typically Poloniex API response)
 
         Args:
             json: List of dates where each entry is a dict of raw market data.
