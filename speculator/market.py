@@ -12,7 +12,7 @@ import speculator.models.deep_neural_network as dnn
 from speculator.utils import date
 from speculator.utils import poloniex
 
-#Enum-like object with 1:1 mapping.  Converts a readable
+# Enum-like object with 1:1 mapping.  Converts a readable
 # market trend like 'bearish' to an int that is easier to parse.
 TARGET_CODES = {'bearish': 0, 'neutral': 1, 'bullish': 2}
 
@@ -120,10 +120,10 @@ def eval_features(json):
         Dict of market features and their values
     """
     return {'close'    : json[-1]['close'],
-            'sma'      : SMA.from_poloniex(json),
-            'rsi'      : RSI.from_poloniex(json),
-            'so'       : SO.from_poloniex(json),
-            'obv'      : OBV.from_poloniex(json)}
+            'sma'      : SMA.eval_from_json(json),
+            'rsi'      : RSI.eval_from_json(json),
+            'so'       : SO.eval_from_json(json),
+            'obv'      : OBV.eval_from_json(json)}
 
 def target_code_to_name(code):
     """ Converts an int target code to a target name

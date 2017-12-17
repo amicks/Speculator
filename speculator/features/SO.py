@@ -30,7 +30,7 @@ class SO(TechnicalAnalysis):
         else:
             return 100 * (closing - low) / (high - low)
 
-    def from_poloniex(json):
+    def eval_from_json(json):
         """ Gets SO from a JSON of market data
 
         Args:

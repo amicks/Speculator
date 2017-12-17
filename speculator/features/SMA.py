@@ -20,7 +20,7 @@ class SMA(TechnicalAnalysis):
         """
         return stats.avg(closes)
 
-    def from_poloniex(json):
+    def eval_from_json(json):
         """ Gets SMA from a JSON of market data
 
         Args:
