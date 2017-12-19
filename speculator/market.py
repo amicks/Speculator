@@ -48,7 +48,7 @@ class Market:
             self.json = self.get_json()
         else:
             self.json = json
-            
+
     def get_json(self):
         """ Gets market chart data from today to a previous date """
         today = dt.now()
@@ -128,6 +128,30 @@ def eval_features(json):
             'rsi'      : RSI.eval_from_json(json),
             'so'       : SO.eval_from_json(json),
             'obv'      : OBV.eval_from_json(json)}
+
+def set_long_features(features, columns=[], partition=2):
+    """ Adds features with a longer duration
+
+    Args:
+        features: Pandas DataFrame instance with columns as
+            numpy.float32 features.
+    """
+    pass
+    """
+    # Create long features DataFrame
+    x_long = m.features(partition=partition)
+
+    # Remove features not specified by args.long
+    unwanted_features = [f for f in x.columns if f not in args.long]
+    x_long = x_long.drop(unwanted_features, axis=1)
+
+    # Prefix long columns with 'long_' to fix naming conflicts
+    x_long.columns = ['long_{0}'.format(f) for f in x_long.columns]
+
+    # Merge the two DataFrames
+    skip = args.partition
+    x = pd.concat([x[skip:].reset_index(drop=True), x_long], axis=1)
+    """
 
 def target_code_to_name(code):
     """ Converts an int target code to a target name
