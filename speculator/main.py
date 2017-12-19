@@ -57,32 +57,34 @@ def main():
 
     m = market.Market(symbol=args.symbol, unit=args.unit,
                       count=args.count, period=args.period)
-    x = m.features(partition=args.partition)
+    features = m.features(partition=args.partition)
     if args.long is not None:
         # Create long features DataFrame
-        x_long = m.features(partition=2 * args.partition)
+        features_long = m.features(partition=2 * args.partition)
 
         # Remove features not specified by args.long
-        unwanted_features = [f for f in x.columns if f not in args.long]
-        x_long = x_long.drop(unwanted_features, axis=1)
-        
+        unwanted_features = [f for f in features.columns if f not in args.long]
+        features_long = features_long.drop(unwanted_features, axis=1)
+
         # Prefix long columns with 'long_' to fix naming conflicts
-        x_long.columns = ['long_{0}'.format(f) for f in x_long.columns]
+        features_long.columns = ['long_{0}'.format(f) for f in features_long.columns]
 
         # Merge the two DataFrames
         skip = args.partition
-        x = pd.concat([x[skip:].reset_index(drop=True), x_long], axis=1)
+        features = pd.concat([features[skip:].reset_index(drop=True),
+                             features_long],
+                             axis=1)
 
-    y = market.targets(x, delta=args.delta)
-    x = x.drop(['close'], axis=1)
+    targets = market.targets(features, delta=args.delta)
+    features = features.drop(['close'], axis=1)
 
-    model = market.setup_model(x[:-1], y,
+    model = market.setup_model(features[:-1], targets,
                                model_type=args.model.lower(),
                                seed=args.seed,
                                n_estimators=args.trees,
                                n_jobs=args.jobs)
 
-    next_date = x.tail(1) # Remember the entry we didn't train?  Predict it.
+    next_date = features.tail(1) # Remember the entry we didn't train?  Predict it.
 
     # TODO: Reimplement display of confusion matrix and feature importances
     acc = model.accuracy(model.features.test, model.targets.test)
