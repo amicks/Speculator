@@ -58,7 +58,7 @@ class Market:
         return poloniex.chart_json(epochs['shifted'], epochs['initial'],
                                    self.period, self.symbol)[0]
 
-    def features(self, partition=1):
+    def set_features(self, partition=1):
         """ Parses market data JSON for technical analysis indicators
 
         Args:
@@ -93,7 +93,7 @@ class Market:
             Pandas DataFrame instance with columns as numpy.float32 features.
         """
         # Create long features DataFrame
-        features_long = self.features(partition=2 * partition)
+        features_long = self.set_features(partition=2 * partition)
 
         # Remove features not specified by args.long
         unwanted_features = [f for f in features.columns if f not in columns_to_set]
@@ -108,7 +108,7 @@ class Market:
                          features_long],
                          axis=1)
 
-def targets(x, delta=10):
+def set_targets(x, delta=10):
     """ Sets target market trend for a date
 
     Args:

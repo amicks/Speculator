@@ -57,13 +57,13 @@ def main():
 
     m = market.Market(symbol=args.symbol, unit=args.unit,
                       count=args.count, period=args.period)
-    features = m.features(partition=args.partition)
+    features = m.set_features(partition=args.partition)
     if args.long is not None:
         features = m.set_long_features(features,
                                        columns_to_set=args.long,
                                        partition=args.partition)
 
-    targets = market.targets(features, delta=args.delta)
+    targets = market.set_targets(features, delta=args.delta)
     features = features.drop(['close'], axis=1)
 
     model = market.setup_model(features[:-1], targets,
