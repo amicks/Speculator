@@ -37,22 +37,26 @@ class Market:
             the raw market statistics.
     """
 
-    def __init__(self, symbol='USDT_BTC', unit='month', count=6, period=86400):
+    def __init__(self, json=None, symbol='USDT_BTC', unit='month', count=6, period=86400):
         """ Inits market class of symbol with data going back count units """
         self.symbol = symbol
         self.unit = unit
         self.count = count
         self.period = period
-        self.load_json()
 
-    def load_json(self):
+        if json:
+            self.json = json
+        else:
+            self.json = self.get_json()
+
+    def get_json(self):
         """ Gets market chart data from today to a previous date """
         today = dt.now()
         DIRECTION = 'last'
         epochs = date.get_end_start_epochs(today.year, today.month, today.day,
                                            DIRECTION, self.unit, self.count)
-        self.json = poloniex.chart_json(epochs['shifted'], epochs['initial'],
-                                        self.period, self.symbol)[0]
+        return poloniex.chart_json(epochs['shifted'], epochs['initial'],
+                                   self.period, self.symbol)[0]
 
     def features(self, partition=1):
         """ Parses market data JSON for technical analysis indicators
