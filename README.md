@@ -14,17 +14,17 @@
 
 <br/>
 
-Speculator predicts the price trend of cryptocurrencies like Bitcoin and Ethereum.
+Speculator is an API for predicting the price trend of cryptocurrencies like Bitcoin and Ethereum.
 
 Normal markets will also be added in future updates.
 
-## How to get started
+## Getting Started
+With Python: `python main.py`
+With Web RESTful API:
 ``` bash
-git clone https://github.com/amicks/Speculator.git
-cd Speculator/speculator
-python main.py
+python api.py
+curl http://localhost:5000/api/public/predict
 ```
-Yes, it is _that_ easy.
 
 **Example:**
 <p>
@@ -42,13 +42,26 @@ Make sure these packages are installed before running Speculator:
 * [TensorFlow](https://www.tensorflow.org/install/), `pip3 install tensorflow`
 * [scikit-learn](http://scikit-learn.org/stable/install.html), `pip3 install scikit-learn`
 * [pandas](https://pandas.pydata.org/pandas-docs/stable/install.html), `pip3 install pandas`
+* [flask](http://flask.pocoo.org), `pip3 install flask`
+* [flask-cache](https://pythonhosted.org/Flask-Cache/), `pip3 install flask-cache`
+* [flask-restful](https://flask-restful.readthedocs.io/en/latest/installation.html), `pip3 install flask-restful`
+* [webargs](https://github.com/sloria/webargs), `pip3 install webargs`
 
 Or just use a one-liner:
 ``` bash
-pip3 install delorean requests numpy tensorflow scikit-learn pandas
+pip3 install delorean requests numpy tensorflow scikit-learn pandas flask flask-cache flask-restful webargs
 ```
 
 ### API
+##### Web RESTful API
+First start the Flask API server with `python api.py`.  Then use HTTP methods like GET: `curl http://localhost:5000/api/public/predict -X GET`
+For a list of valid arguments in the URL, please check back tomorrow (12/20/17).
+
+I plan to start a server for anyone to access this without starting their own Flask server, but with only public access.
+Starting this on your own server with authentication for users (private access) will allow you to PUT/POST/DELETE your own market data and analyze that instead of the default.
+This is currently in development and will be extended in the future.
+
+##### Python Package
 Speculator is available as a package on PyPi.
 ```
 pip3 install speculator
@@ -69,6 +82,7 @@ docs
     \_ utils.md
 
 speculator
+    \_ api.py
     \_ main.py
     \_ market.py
     \_ features
