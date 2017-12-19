@@ -44,11 +44,11 @@ class Market:
         self.count = count
         self.period = period
 
-        if json:
-            self.json = json
-        else:
+        if json is None:
             self.json = self.get_json()
-
+        else:
+            self.json = json
+            
     def get_json(self):
         """ Gets market chart data from today to a previous date """
         today = dt.now()
