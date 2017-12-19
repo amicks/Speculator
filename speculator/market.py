@@ -77,6 +77,37 @@ class Market:
             data.append(eval_features(json))
         return pd.DataFrame(data=data, dtype=np.float32)
 
+    def set_long_features(self, features, columns_to_set=[], partition=2):
+        """ Sets features of double the duration
+
+        Example: Setting 14 day RSIs to longer will create add a
+            feature column of a 28 day RSIs.
+
+        Args:
+            features: Pandas DataFrame instance with columns as numpy.float32 features.
+            columns_to_set: List of strings of feature names to make longer
+            partition: Int of how many dates to take into consideration
+                when evaluating technical analysis indicators.
+
+        Returns:
+            Pandas DataFrame instance with columns as numpy.float32 features.
+        """
+        # Create long features DataFrame
+        features_long = self.features(partition=2 * partition)
+
+        # Remove features not specified by args.long
+        unwanted_features = [f for f in features.columns if f not in columns_to_set]
+        features_long = features_long.drop(unwanted_features, axis=1)
+
+        # Prefix long columns with 'long_' to fix naming conflicts
+        features_long.columns = ['long_{0}'.format(f) for f in features_long.columns]
+
+        # Merge the two DataFrames
+        skip = partition
+        return pd.concat([features[skip:].reset_index(drop=True),
+                         features_long],
+                         axis=1)
+
 def targets(x, delta=10):
     """ Sets target market trend for a date
 
@@ -128,30 +159,6 @@ def eval_features(json):
             'rsi'      : RSI.eval_from_json(json),
             'so'       : SO.eval_from_json(json),
             'obv'      : OBV.eval_from_json(json)}
-
-def set_long_features(features, columns=[], partition=2):
-    """ Adds features with a longer duration
-
-    Args:
-        features: Pandas DataFrame instance with columns as
-            numpy.float32 features.
-    """
-    pass
-    """
-    # Create long features DataFrame
-    x_long = m.features(partition=partition)
-
-    # Remove features not specified by args.long
-    unwanted_features = [f for f in x.columns if f not in args.long]
-    x_long = x_long.drop(unwanted_features, axis=1)
-
-    # Prefix long columns with 'long_' to fix naming conflicts
-    x_long.columns = ['long_{0}'.format(f) for f in x_long.columns]
-
-    # Merge the two DataFrames
-    skip = args.partition
-    x = pd.concat([x[skip:].reset_index(drop=True), x_long], axis=1)
-    """
 
 def target_code_to_name(code):
     """ Converts an int target code to a target name

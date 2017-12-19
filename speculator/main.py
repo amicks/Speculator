@@ -59,21 +59,9 @@ def main():
                       count=args.count, period=args.period)
     features = m.features(partition=args.partition)
     if args.long is not None:
-        # Create long features DataFrame
-        features_long = m.features(partition=2 * args.partition)
-
-        # Remove features not specified by args.long
-        unwanted_features = [f for f in features.columns if f not in args.long]
-        features_long = features_long.drop(unwanted_features, axis=1)
-
-        # Prefix long columns with 'long_' to fix naming conflicts
-        features_long.columns = ['long_{0}'.format(f) for f in features_long.columns]
-
-        # Merge the two DataFrames
-        skip = args.partition
-        features = pd.concat([features[skip:].reset_index(drop=True),
-                             features_long],
-                             axis=1)
+        features = m.set_long_features(features,
+                                       columns_to_set=args.long,
+                                       partition=args.partition)
 
     targets = market.targets(features, delta=args.delta)
     features = features.drop(['close'], axis=1)
