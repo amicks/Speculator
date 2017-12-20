@@ -1,14 +1,24 @@
-from flask import Flask, request
+from flask import abort, Flask, request
 from flask_cache import Cache
-from flask_restful import Resource, Api, reqparse
+from flask_restful import Api, reqparse, Resource
+from flask_sqlalchemy import SQLAlchemy
+from os import getenv
 from speculator import market
+from speculator.utils import databases
 from webargs import fields
 from webargs.flaskparser import use_kwargs
 
 app = Flask(__name__)
-api = Api(app)
 
-# TODO: Add private API with Redis
+db_uri = getenv('SQLALCHEMY_DATABASE_URI') # format: postgresql://user:pw@host:port/db
+if not db_uri:
+    abort(401)
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# TODO: Add private API with Redis Cache and PostgreSQL (or any SQL DB with SQLAlchemy)
+api = Api(app)
+db = SQLAlchemy(app)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 cache.init_app(app)
 
