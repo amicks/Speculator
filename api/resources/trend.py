@@ -1,33 +1,16 @@
-from flask import abort, Flask, request
-from flask_cache import Cache
-from flask_restful import Api, reqparse, Resource
-from flask_sqlalchemy import SQLAlchemy
-from os import getenv
+from api import api, cache
+from flask_restful import Resource
 from speculator import market
-from speculator.utils import databases
 from webargs import fields
 from webargs.flaskparser import use_kwargs
 
-app = Flask(__name__)
-
-db_uri = getenv('SQLALCHEMY_DATABASE_URI') # format: postgresql://user:pw@host:port/db
-if not db_uri:
-    abort(401)
-app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# TODO: Add private API with Redis Cache and PostgreSQL (or any SQL DB with SQLAlchemy)
-api = Api(app)
-db = SQLAlchemy(app)
-cache = Cache(app, config={'CACHE_TYPE': 'simple'})
-cache.init_app(app)
-
 @api.resource('/api/public/predict')
-class predict(Resource):
+class Predict(Resource):
     """ Predict the next price of a symbol like USDT_BTC """
     # TODO: Add private POST/PUT/DELETE methods
 
     @use_kwargs({
+        'use_db': fields.Boolean(missing=False),
         'model': fields.Str(missing='rf'),
         'symbol': fields.Str(missing='USDT_BTC'),
         'unit': fields.Str(missing='month'),
@@ -41,9 +24,14 @@ class predict(Resource):
         'longs': fields.DelimitedList(fields.Str(), missing=[])
     })
     @cache.memoize(3600)
-    def get(self, model, symbol, unit, count, period,
+    def get(self, use_db, model, symbol, unit, count, period,
             partition, delta, seed, trees, jobs, longs):
-        m = market.Market(symbol=symbol, unit=unit,
+        if use_db:
+            db_json = None
+        else:
+            db_json = None
+
+        m = market.Market(json=db_json, symbol=symbol, unit=unit,
                           count=count, period=period)
 
         features = m.set_features(partition=partition)
@@ -69,11 +57,8 @@ class predict(Resource):
 
         return {
             "trend": trend,
-            "test_set_accuracy": "{0:.3f}%".format(100 * accuracy),
+            "test_set_accuracy": accuracy,
             "probabilities": {
                 market.target_code_to_name(code): p for code, p in enumerate(proba[0])
             }
         }
-
-if __name__ == '__main__':
-    app.run(debug=True)

@@ -2,7 +2,7 @@ from flask import abort
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 
-def validate_db(sqlalchemy_bind):
+def validate_db(sqlalchemy_bind, is_enabled=True):
     """ Checks if a DB is authorized and responding before executing the function """
     def decorator(func):
         @wraps(func)
@@ -14,7 +14,7 @@ def validate_db(sqlalchemy_bind):
                     return False
                 else:
                     return True
-            if is_db_responsive():
+            if is_enabled and is_db_responsive():
                 return func(*args, **kwargs)
             else:
                 abort(401)
