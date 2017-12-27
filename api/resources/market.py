@@ -19,9 +19,7 @@ data_kwargs = {
 @api.resource('/api/private/market/')
 class Data(Resource):
     """ Market data at an instance in time """
-    @use_kwargs({
-        'id': fields.Integer(required=True)
-    })
+    @use_kwargs({'id': fields.Integer(required=True)})
     @validate_db(db)
     def get(self, id):
         return query_to_dict(DataModel.query.get_or_404(id))
@@ -41,13 +39,22 @@ class Data(Resource):
     @use_kwargs(data_kwargs)
     @validate_db(db)
     def put(self, id, low, high, close, volume):
-        """ Loop through function args, only change what is specified """
+        """ Loop through function args, only change what is specified
+        NOTE: Arg values of -1 clears since each must be >= 0 to be valid
+        """
         query = DataModel.query.get_or_404(id)
         for arg, value in locals().items():
             if arg is not 'id' and arg is not 'self' and value is not None:
-                setattr(query, arg, value)
+                if value == -1:
+                    setattr(query, arg, None)
+                else:
+                    setattr(query, arg, value)
         db.session.commit()
         return query_to_dict(query)
 
-    def delete(self):
-        return {'foo': 'bar'}
+    @use_kwargs({'id': fields.Integer(required=True)})
+    @validate_db(db)
+    def delete(self, id):
+        db.session.delete(DataModel.query.get_or_404(id))
+        db.session.commit()
+        return {'status': 'successful'}
