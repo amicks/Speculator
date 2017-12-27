@@ -27,12 +27,7 @@ python api.py
 curl http://localhost:5000/api/public/predict
 ```
 
-If you want to access the private API, simply make the DB connection an environment variable:
-```
-export SQLALCHEMY_DATABASE_URI='postgresql://username:password@host:port/db'
-```
-
-For a full list of SQLALCHEMY_DATABASE_URI formats, see [SQLAlchemy's docs](http://flask-sqlalchemy.pocoo.org/2.3/config/) under "Connection URI Format".
+For a full list of SQLALCHEMY\_DATABASE\_URI formats, see [SQLAlchemy's docs](http://flask-sqlalchemy.pocoo.org/2.3/config/) under "Connection URI Format".
 
 **Prediction Example:**
 <p>
@@ -45,7 +40,7 @@ Use the `--help` flag for a complete list of optional arguments.
 ### Dependencies
 Make sure these packages are installed before running Speculator:
 ``` bash
-pip3 install delorean requests numpy tensorflow scikit-learn pandas flask flask-cache flask-restful flask-sqlalchemy psycopg2 webargs
+pip3 install delorean requests numpy tensorflow scikit-learn pandas flask flask-caching flask-restful flask-sqlalchemy psycopg2 webargs
 ```
 
 ### API
@@ -57,7 +52,74 @@ python api.py
 curl http://localhost:5000/api/public/predict -X GET
 ```
 
-For a list of valid arguments in the URL, please check back tomorrow (12/20/17).
+If you want to access the private API, simply make the DB connection an environment variable:
+```
+export SQLALCHEMY_DATABASE_URI='postgresql://username:password@host:port/db'
+```
+
+Private API access with a DB is enabled by default in api/\_\_init\_\_.py
+Set `ENABLE_DB = False` to disable this.
+
+##### Resources/Routes
+
+---
+
+**GET: `/api/private/market/?<int:id>`**
+Retrieves market data from *required* id
+
+**PUT: `/api/private/market/?<int:id>&<float:low>&<float:high>&<float:close>&<float:volume>`**
+Creates market data from *required* id and *optional* keyword arguments of low, high and close prices, and volume.
+
+**POST: `/api/private/market/?<int:id>&<float:low>&<float:high>&<float:close>&<float:volume>`**
+Updates market data from *required* id and *optional* keyword arguments of low, high and close prices, and volume.
+A value of -1 clears the attribute.
+
+**DELETE: `/api/private/market/?<int:id>`**
+Deletes market data from *required* id
+
+---
+
+**GET: `/api/public/predict/?<bool:use_db>&<str:model_type>&<str:symbol>&<str:unit>&<int:count>&<int:period>&<int:partition>&<int:delta>&<int:seed>&<int:trees>&<int:jobs>&<DelimitedList<str>:longs>`**
+Gets prediction of the next trend, including probabilities of various outcomes and test set accuracy.
+
+All arguments are optional.
+
+- use_db: Enables the use of DB market data from the private API
+  - note: When True, arguments for automatic gathering of data will be disabled (like unit)
+  - default: False
+- model_type: Machine learning model to train
+  - default: 'random_forest'
+  - valid values: 'random_forest', 'rf', 'deep_neural_network', or 'dnn'
+- symbol: Currency to predict
+  - default: 'USDT_BTC'
+  - valid values: Symbols/Conversions are available via [Poloniex](https://poloniex.com/exchange)
+- unit: Duration to predict from
+  - default: 'month'
+  - valid values: second, minute, hour, day, week, month, year
+- count: `units` to predict from
+  - default: 6
+- period: Seconds for each chart candlestick
+  - default: 86400
+  - valid values: 300, 900, 1800, 7200, 14400, 86400
+- partition: Market dates for each feature
+  - note: A K-day RSI would need a partition of K
+  - default: 14
+- delta: Size of price neutral zone
+  - note: Distinguishes between bearish/neutral/bullish trends
+  - default: 25
+- seed: Produces consistent results for ML models
+  - note: When omitted (seed is None), values are inconsistent and not reproducible
+  - default: None
+- trees: Trees for the Random Forest model
+  - note: Higher values (~65) are typically more accurate
+  - default: 10
+- jobs: CPU threads to use
+  - default: 1
+- longs: Uses long duration features
+  - note: A K-day RSI would also include a 2K-day RSI (*long RSI*)
+  - default: []
+
+---
 
 I plan to start a server for anyone to access this without starting their own Flask server, but with only public access.
 Starting this on your own server with authentication for users (private access) will allow you to PUT/POST/DELETE your own market data and analyze that instead of the default.
