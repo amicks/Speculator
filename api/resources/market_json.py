@@ -1,4 +1,5 @@
-from api import api
+# TODO: Only require market stats that are being used by ML models
+from api import api, db
 from flask_restful import Resource
 
 @api.resource('/api/private/db/market_list')
@@ -20,22 +21,25 @@ class MarketList(Resource):
 
     """
     def get(self):
-        return {"foo": "bar"}
+        return {'foo': 'bar'}
+
+    def post(self):
+        return {'foo': 'bar'}
 
     def delete(self):
-        return {"foo": "bar"}
+        return {'foo': 'bar'}
 
 @api.resource('/api/private/db/market_list/item')
 class MarketJsonItem(Resource):
-    """ Contains raw market data for one instance """
+    """ Market data of an instance in time """
     def get(self):
-        return {"foo": "bar"}
+        return {'foo': 'bar'}
 
     def post(self):
-        return {"foo": "bar"}
+        return {'foo': 'bar'}
 
     def put(self):
-        return {"foo": "bar"}
+        return {'foo': 'bar'}
 
     def delete(self):
-        return {"foo": "bar"}
+        return {'foo': 'bar'}

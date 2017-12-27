@@ -56,9 +56,9 @@ class Predict(Resource):
         proba_log = model._predict_logs(next_date) # Logarithmic scale
 
         return {
-            "trend": trend,
-            "test_set_accuracy": accuracy,
-            "probabilities": {
+            'trend': trend,
+            'test_set_accuracy': accuracy,
+            'probabilities': {
                 market.target_code_to_name(code): p for code, p in enumerate(proba[0])
             }
         }

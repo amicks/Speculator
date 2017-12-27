@@ -9,7 +9,7 @@ def validate_db(sqlalchemy_bind, is_enabled=True):
         def wrapper(*args, **kwargs):
             def is_db_responsive():
                 try:
-                    sqlalchemy_bind.session.query("1").first_or_404()
+                    sqlalchemy_bind.session.query('1').first_or_404()
                 except:
                     return False
                 else:
