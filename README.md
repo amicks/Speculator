@@ -65,21 +65,26 @@ Set `ENABLE_DB = False` to disable this.
 ---
 
 **GET: `/api/private/market/?<int:id>`**
+
 Retrieves market data from *required* id
 
 **PUT: `/api/private/market/?<int:id>&<float:low>&<float:high>&<float:close>&<float:volume>`**
+
 Creates market data from *required* id and *optional* keyword arguments of low, high and close prices, and volume.
 
 **POST: `/api/private/market/?<int:id>&<float:low>&<float:high>&<float:close>&<float:volume>`**
+
 Updates market data from *required* id and *optional* keyword arguments of low, high and close prices, and volume.
 A value of -1 clears the attribute.
 
 **DELETE: `/api/private/market/?<int:id>`**
+
 Deletes market data from *required* id
 
 ---
 
 **GET: `/api/public/predict/?<bool:use_db>&<str:model_type>&<str:symbol>&<str:unit>&<int:count>&<int:period>&<int:partition>&<int:delta>&<int:seed>&<int:trees>&<int:jobs>&<DelimitedList<str>:longs>`**
+
 Gets prediction of the next trend, including probabilities of various outcomes and test set accuracy.
 
 All arguments are optional.
