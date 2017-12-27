@@ -8,6 +8,14 @@ from flask_restful import Resource
 from webargs import fields
 from webargs.flaskparser import use_kwargs
 
+data_kwargs = {
+    'id': fields.Integer(required=True),
+    'low': fields.Float(missing=None),
+    'high': fields.Float(missing=None),
+    'close': fields.Float(missing=None),
+    'volume': fields.Float(missing=None)
+}
+
 @api.resource('/api/private/market/')
 class Data(Resource):
     """ Market data at an instance in time """
@@ -18,13 +26,7 @@ class Data(Resource):
     def get(self, id):
         return query_to_dict(DataModel.query.get_or_404(id))
 
-    @use_kwargs({
-        'id': fields.Integer(required=True),
-        'low': fields.Float(missing=None),
-        'high': fields.Float(missing=None),
-        'close': fields.Float(missing=None),
-        'volume': fields.Float(missing=None)
-    })
+    @use_kwargs(data_kwargs)
     @validate_db(db)
     def post(self, id, low, high, close, volume):
         try:
@@ -36,8 +38,16 @@ class Data(Resource):
         else:
             return query_to_dict(post_request)
 
-    def put(self):
-        return {'foo': 'bar'}
+    @use_kwargs(data_kwargs)
+    @validate_db(db)
+    def put(self, id, low, high, close, volume):
+        """ Loop through function args, only change what is specified """
+        query = DataModel.query.get_or_404(id)
+        for arg, value in locals().items():
+            if arg is not 'id' and arg is not 'self' and value is not None:
+                setattr(query, arg, value)
+        db.session.commit()
+        return query_to_dict(query)
 
     def delete(self):
         return {'foo': 'bar'}
