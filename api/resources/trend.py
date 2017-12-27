@@ -4,34 +4,35 @@ from speculator import market
 from webargs import fields
 from webargs.flaskparser import use_kwargs
 
-@api.resource('/api/public/predict')
+@api.resource('/api/public/predict/')
 class Predict(Resource):
     """ Predict the next price of a symbol like USDT_BTC """
     # TODO: Add private POST/PUT/DELETE methods
 
     @use_kwargs({
-        'use_db': fields.Boolean(missing=False),
-        'model': fields.Str(missing='rf'),
+        'market_list_id': fields.Int(missing=None),
+        'model_type': fields.Str(missing='rf'),
         'symbol': fields.Str(missing='USDT_BTC'),
         'unit': fields.Str(missing='month'),
         'count': fields.Int(missing=6),
-        'period': fields.Integer(missing=86400),
-        'partition': fields.Integer(missing=14),
-        'delta': fields.Integer(missing=25),
-        'seed': fields.Integer(missing=None),
-        'trees': fields.Integer(missing=10),
-        'jobs': fields.Integer(missing=1),
+        'period': fields.Int(missing=86400),
+        'partition': fields.Int(missing=14),
+        'delta': fields.Int(missing=25),
+        'seed': fields.Int(missing=None),
+        'trees': fields.Int(missing=10),
+        'jobs': fields.Int(missing=1),
         'longs': fields.DelimitedList(fields.Str(), missing=[])
     })
     @cache.memoize(3600)
-    def get(self, use_db, model, symbol, unit, count, period,
+    def get(self, market_list_id, model_type, symbol, unit, count, period,
             partition, delta, seed, trees, jobs, longs):
-        if use_db:
-            db_json = None
+        if market_list_id is None:
+            json = None
         else:
-            db_json = None
+            # Retrieve JSON by market_list_id
+            json = None
 
-        m = market.Market(json=db_json, symbol=symbol, unit=unit,
+        m = market.Market(json=json, symbol=symbol, unit=unit,
                           count=count, period=period)
 
         features = m.set_features(partition=partition)
@@ -43,7 +44,7 @@ class Predict(Resource):
         features = features.drop(['close'], axis=1)
 
         model = market.setup_model(features[:-1], targets,
-                                   model_type=model.lower(),
+                                   model_type=model_type.lower(),
                                    seed=seed,
                                    n_estimators=trees,
                                    n_jobs=jobs)

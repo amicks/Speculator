@@ -3,7 +3,7 @@ from api import api, cache, db
 from flask import abort, Flask
 from flask_restful import Resource
 from os import getenv
-from api.resources.market_json import MarketJsonItem, MarketList
+from api.resources.market import Data
 from api.resources.trend import Predict
 
 def setup_app():
