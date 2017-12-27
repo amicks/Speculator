@@ -5,3 +5,5 @@ from flask_sqlalchemy import SQLAlchemy
 cache = Cache(config={'CACHE_TYPE': 'simple'})
 api = Api()
 db = SQLAlchemy()
+
+ENABLE_DB = True

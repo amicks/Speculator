@@ -1,4 +1,5 @@
 from abc import ABC
+from api import ENABLE_DB
 from flask import abort
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
@@ -13,7 +14,7 @@ class HTTP_CODES(ABC):
 def query_to_dict(query):
     return dict((col, getattr(query, col)) for col in query.__table__.columns.keys())
 
-def validate_db(sqlalchemy_bind, is_enabled=True):
+def validate_db(sqlalchemy_bind, is_enabled=ENABLE_DB):
     """ Checks if a DB is authorized and responding before executing the function """
     def decorator(func):
         @wraps(func)
