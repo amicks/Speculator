@@ -1,5 +1,6 @@
 # TODO: Only require market stats that are being used by ML models
 # TODO: Allow storage/retrieval of multiple markets
+""" Allows storage/retrieval for custom market data instead of automatic gathering """
 from api import api, db
 from api.helpers import HTTP_CODES, query_to_dict, validate_db
 from api.models.market import Data as DataModel

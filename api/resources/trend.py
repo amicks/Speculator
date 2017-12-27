@@ -1,4 +1,6 @@
-from api import api, cache
+from api import api, cache, db
+from api.models.market import Data
+from api.helpers import query_to_dict, validate_db
 from flask_restful import Resource
 from speculator import market
 from webargs import fields
@@ -10,7 +12,7 @@ class Predict(Resource):
     # TODO: Add private POST/PUT/DELETE methods
 
     @use_kwargs({
-        'market_list_id': fields.Int(missing=None),
+        'use_db': fields.Boolean(missing=False),
         'model_type': fields.Str(missing='rf'),
         'symbol': fields.Str(missing='USDT_BTC'),
         'unit': fields.Str(missing='month'),
@@ -24,12 +26,12 @@ class Predict(Resource):
         'longs': fields.DelimitedList(fields.Str(), missing=[])
     })
     @cache.memoize(3600)
-    def get(self, market_list_id, model_type, symbol, unit, count, period,
+    @validate_db(db)
+    def get(self, use_db, model_type, symbol, unit, count, period,
             partition, delta, seed, trees, jobs, longs):
-        if market_list_id is None:
-            json = None
+        if use_db:
+            json = [query_to_dict(q) for q in Data.query.all()]
         else:
-            # Retrieve JSON by market_list_id
             json = None
 
         m = market.Market(json=json, symbol=symbol, unit=unit,
