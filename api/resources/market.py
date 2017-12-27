@@ -59,10 +59,14 @@ class Data(Resource):
     @use_kwargs({'id': fields.Integer(missing=None)})
     @validate_db(db)
     def delete(self, id):
-        if id is None:
-            DataModel.query.delete()
-            db.session.commit()
+        try:
+            if id is None:
+                DataModel.query.delete()
+                db.session.commit()
+            else:
+                db.session.delete(DataModel.query.get_or_404(id))
+                db.session.commit()
+        except:
+            return {'status': 'failed'}
         else:
-            db.session.delete(DataModel.query.get_or_404(id))
-            db.session.commit()
-        return {'status': 'successful'}
+            return {'status': 'successful'}

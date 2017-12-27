@@ -18,77 +18,115 @@ Speculator is an API for predicting the price trend of cryptocurrencies like Bit
 
 Normal markets will also be added in future updates.
 
-## Getting Started
-Using Python: `python main.py`
+# Getting Started
 
-Using Public REST API:
+## REST API
+Start the Flask app then make requests:
 ``` bash
-python api.py
-curl http://localhost:5000/api/public/predict
-```
-
-**Prediction Example:**
-<p>
-  <img src="https://i.imgur.com/c6JdDWt.png" width="700" height="180">
-</p>
-
-Use the `--help` flag for a complete list of optional arguments.
-###### Note: A website for a friendly user experience is in development
-
-### Dependencies
-Make sure these packages are installed before running Speculator:
-``` bash
-pip3 install delorean requests numpy tensorflow scikit-learn pandas flask flask-caching flask-restful flask-sqlalchemy psycopg2 webargs
-```
-
-### API
-#### Web RESTful API
-Just start the Flask server then make requests:
-
-``` bash
-python api.py
+python app.py
 curl http://localhost:5000/api/public/predict -X GET
 ```
 
-If you want to access the private API, simply make the DB connection an environment variable:
-```
-export SQLALCHEMY_DATABASE_URI='postgresql://username:password@host:port/db'
-```
-
-For a full list of SQLALCHEMY\_DATABASE\_URI formats, see [SQLAlchemy's docs](http://flask-sqlalchemy.pocoo.org/2.3/config/) under "Connection URI Format".
-
-Private API access with a DB is enabled by default in api/\_\_init\_\_.py
-Set `ENABLE_DB = False` to disable this.
-
-##### Resources/Routes
+**Resources/Routes**
+### Routes Summary
+- GET/DELETE: `/api/private/market/`
+  - GET/DELETE: `/api/private/market/?<int:id>`
+    - PUT/POST: `/api/private/market/?<int:id>&<float:low>&<float:high>&<float:close>&<float:volume>`
+- GET: `/api/public/predict/?<bool:use_db>&<str:model_type>&<str:symbol>&<str:unit>&<int:count>&<int:period>&<int:partition>&<int:delta>&<int:seed>&<int:trees>&<int:jobs>&<DelimitedList<str>:longs>`
 
 ---
 
-**GET: `/api/private/market/?<int:id>`**
+### GET: `/api/private/market/?<int:id>`
 
-Retrieves market data from *required* id
+Retrieves market data from *optional* id.  When omitted, all entries will be returned.
 
-**PUT: `/api/private/market/?<int:id>&<float:low>&<float:high>&<float:close>&<float:volume>`**
+Example Output:
 
-Creates market data from *required* id and *optional* keyword arguments of low, high and close prices, and volume.
+```json
+[
+    {
+      "id": 1,
+      "low": 2.0,
+      "high": 10.0,
+      "close": 6.0,
+      "volume": 2.0
+    },
+    {
+        "id": 2,
+        "low": 23.0,
+        "high": 40.0,
+        "close": 33.0,
+        "volume": 5.0
+    }
+]
+```
 
-**POST: `/api/private/market/?<int:id>&<float:low>&<float:high>&<float:close>&<float:volume>`**
+### POST: `/api/private/market/?<int:id>&<float:low>&<float:high>&<float:close>&<float:volume>`
 
 Updates market data from *required* id and *optional* keyword arguments of low, high and close prices, and volume.
+
+Example Output:
+
+```json
+{
+    "id": 1,
+    "low": 2.0,
+    "high": 10.0,
+    "close": 6.0,
+    "volume": 2.0
+}
+```
+
+### PUT: `/api/private/market/?<int:id>&<float:low>&<float:high>&<float:close>&<float:volume>`
+
+Creates market data from *required* id and *optional* keyword arguments of low, high and close prices, and volume.
 A value of -1 clears the attribute.
 
-**DELETE: `/api/private/market/?<int:id>`**
+Example Output:
 
-Deletes market data from *required* id
+```json
+{
+    "id": 1,
+    "low": 2.0,
+    "high": 10.0,
+    "close": 5.0,
+    "volume": null
+}
+```
+
+### DELETE: `/api/private/market/?<int:id>`
+
+Deletes market data from *optional* id.  When omitted, all entries will be deleted.
+
+Example Output:
+
+```json
+{
+    "status": "successful"
+}
+```
 
 ---
 
-**GET: `/api/public/predict/?<bool:use_db>&<str:model_type>&<str:symbol>&<str:unit>&<int:count>&<int:period>&<int:partition>&<int:delta>&<int:seed>&<int:trees>&<int:jobs>&<DelimitedList<str>:longs>`**
+### GET: `/api/public/predict/?<bool:use_db>&<str:model_type>&<str:symbol>&<str:unit>&<int:count>&<int:period>&<int:partition>&<int:delta>&<int:seed>&<int:trees>&<int:jobs>&<DelimitedList<str>:longs>`
 
 Gets prediction of the next trend, including probabilities of various outcomes and test set accuracy.
 
-All arguments are optional.
+Example Output:
 
+```json
+{
+    "trend": "bearish",
+    "test_set_accuracy": 0.46153846153846156,
+    "probabilities": {
+        "bearish": 0.8,
+        "neutral": 0.0,
+        "bullish": 0.2
+    }
+}
+```
+
+All arguments are optional:
 - use_db: Enables the use of DB market data from the private API
   - note: When True, arguments for automatic gathering of data will be disabled (like unit)
   - default: False
@@ -126,19 +164,41 @@ All arguments are optional.
 
 ---
 
+If you want to access the private API, simply make the DB connection an environment variable:
+```
+export SQLALCHEMY_DATABASE_URI='postgresql://username:password@host:port/db'
+```
+
+For a full list of SQLALCHEMY\_DATABASE\_URI formats, see [SQLAlchemy's docs](http://flask-sqlalchemy.pocoo.org/2.3/config/) under "Connection URI Format".
+
+Private API access with a DB is enabled by default in api/\_\_init\_\_.py
+Set `ENABLE_DB = False` to disable this.
+
+---
+
 I plan to start a server for anyone to access this without starting their own Flask server, but with only public access.
 Starting this on your own server with authentication for users (private access) will allow you to PUT/POST/DELETE your own market data and analyze that instead of the default.
 This is currently in development and will be extended in the future.
 
-#### Python Package
-Speculator is available as a package on PyPi.
-```
-pip3 install speculator
+## Python Usage
+- program: `python main.py`
+- package: `pip3 install speculator`
+
+Example Output:
+<p>
+  <img src="https://i.imgur.com/c6JdDWt.png" width="700" height="180">
+</p>
+
+Use the `--help` flag for a complete list of optional arguments.
+
+### Dependencies
+Make sure these packages are installed before running Speculator:
+``` bash
+pip3 install delorean requests numpy tensorflow scikit-learn pandas flask flask-caching flask-restful flask-sqlalchemy psycopg2 webargs
 ```
 
-If you want to use or thoroughly understand Speculator's API, I recommend checking out the [docs](docs/), which features a fully documented example.
 
-### Project Structure
+## Project Structure
 ```
 LICENSE
 README.md
@@ -190,8 +250,10 @@ speculator
 ## Contact for Feedback, Questions, or Issues
 Feel free to send me a message on Reddit at [/u/shneap](https://www.reddit.com/message/compose?to=shneap).  I am happy to hear any concerns, good or bad, in order to progress the development of this project.
 
-### Contributing
-Please read the detailed [contributing doc](docs/CONTRIBUTING.md).
+###### Note: A website for a friendly user experience is in development
 
-### Disclaimer
+## Contributing
+Please see the [contributing doc](docs/CONTRIBUTING.md).
+
+## Disclaimer
 Speculator is not to be used as financial advice or a guide for any financial investments.
