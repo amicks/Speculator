@@ -26,11 +26,15 @@ class Predict(Resource):
         'longs': fields.DelimitedList(fields.Str(), missing=[])
     })
     @cache.memoize(3600)
-    @validate_db(db)
     def get(self, use_db, model_type, symbol, unit, count, period,
             partition, delta, seed, trees, jobs, longs):
+
+        # If using db then validate db
         if use_db:
-            json = [query_to_dict(q) for q in Data.query.all()]
+            @validate_db(db)
+            def get_queries():
+                return [query_to_dict(q) for q in Data.query.all()]
+            json = get_queries()
         else:
             json = None
 
