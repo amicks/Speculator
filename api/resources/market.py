@@ -20,10 +20,13 @@ data_kwargs = {
 @api.resource('/api/private/market/')
 class Data(Resource):
     """ Market data at an instance in time """
-    @use_kwargs({'id': fields.Integer(required=True)})
+    @use_kwargs({'id': fields.Integer(missing=None)})
     @validate_db(db)
     def get(self, id):
-        return query_to_dict(DataModel.query.get_or_404(id))
+        if id is None:
+            return [query_to_dict(q) for q in DataModel.query.all()]
+        else:
+            return query_to_dict(DataModel.query.get_or_404(id))
 
     @use_kwargs(data_kwargs)
     @validate_db(db)
@@ -53,9 +56,13 @@ class Data(Resource):
         db.session.commit()
         return query_to_dict(query)
 
-    @use_kwargs({'id': fields.Integer(required=True)})
+    @use_kwargs({'id': fields.Integer(missing=None)})
     @validate_db(db)
     def delete(self, id):
-        db.session.delete(DataModel.query.get_or_404(id))
-        db.session.commit()
+        if id is None:
+            DataModel.query.delete()
+            db.session.commit()
+        else:
+            db.session.delete(DataModel.query.get_or_404(id))
+            db.session.commit()
         return {'status': 'successful'}
