@@ -27,7 +27,6 @@ python app.py
 curl http://localhost:5000/api/public/predict -X GET
 ```
 
-**Resources/Routes**
 ### Routes Summary
 - GET/DELETE: `/api/private/market/`
   - GET/DELETE: `/api/private/market/?<int:id>`
