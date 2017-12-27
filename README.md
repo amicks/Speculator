@@ -143,15 +143,23 @@ If you want to use or thoroughly understand Speculator's API, I recommend checki
 LICENSE
 README.md
 
+api
+  \_ models
+           \_ market.py
+  \_ resources
+              \_ market.py
+              \_ trend.py
+  \_ app.py
+  \_ helpers.py
+
 docs
-    \_ CONTRIBUTING.md
-    \_ analysis.md
-    \_ example.md
-    \_ example.py
-    \_ utils.md
+  \_ CONTRIBUTING.md
+  \_ analysis.md
+  \_ example.md
+  \_ example.py
+  \_ utils.md
 
 speculator
-    \_ api.py
     \_ main.py
     \_ market.py
     \_ features
