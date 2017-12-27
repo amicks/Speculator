@@ -27,8 +27,6 @@ python api.py
 curl http://localhost:5000/api/public/predict
 ```
 
-For a full list of SQLALCHEMY\_DATABASE\_URI formats, see [SQLAlchemy's docs](http://flask-sqlalchemy.pocoo.org/2.3/config/) under "Connection URI Format".
-
 **Prediction Example:**
 <p>
   <img src="https://i.imgur.com/c6JdDWt.png" width="700" height="180">
@@ -56,6 +54,8 @@ If you want to access the private API, simply make the DB connection an environm
 ```
 export SQLALCHEMY_DATABASE_URI='postgresql://username:password@host:port/db'
 ```
+
+For a full list of SQLALCHEMY\_DATABASE\_URI formats, see [SQLAlchemy's docs](http://flask-sqlalchemy.pocoo.org/2.3/config/) under "Connection URI Format".
 
 Private API access with a DB is enabled by default in api/\_\_init\_\_.py
 Set `ENABLE_DB = False` to disable this.
