@@ -27,6 +27,12 @@ python app.py
 curl http://localhost:5000/api/public/predict -X GET
 ```
 
+### Dependencies
+Make sure these packages are installed before running Speculator:
+``` bash
+pip3 install delorean requests numpy tensorflow scikit-learn pandas flask flask-caching flask-restful flask-sqlalchemy psycopg2 webargs
+```
+
 ### Routes Summary
 - GET/DELETE: `/api/private/market/`
   - GET/DELETE: `/api/private/market/?<int:id>`
@@ -189,13 +195,6 @@ Example Output:
 </p>
 
 Use the `--help` flag for a complete list of optional arguments.
-
-### Dependencies
-Make sure these packages are installed before running Speculator:
-``` bash
-pip3 install delorean requests numpy tensorflow scikit-learn pandas flask flask-caching flask-restful flask-sqlalchemy psycopg2 webargs
-```
-
 
 ## Project Structure
 ```
