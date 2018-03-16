@@ -253,5 +253,8 @@ Feel free to send me a message on Reddit at [/u/shneap](https://www.reddit.com/m
 ## Contributing
 Please see the [contributing doc](docs/CONTRIBUTING.md).
 
+## Basis
+Part of this project is focused on an implementation of the research paper ["Predicting the direction of stock market prices using random forest"](https://arxiv.org/pdf/1605.00003.pdf) by Luckyson Khaidem, Snehanshu Saha, and Sudeepa Roy Dey. I hope to gain insights into the accuracy of market technical analysis combined with modern machine learning methods.
+
 ## Disclaimer
 Speculator is not to be used as financial advice or a guide for any financial investments.
