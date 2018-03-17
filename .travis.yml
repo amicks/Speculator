@@ -2,6 +2,6 @@ language: python
 python:
  - "3.6"
 install:
- - pip3 install delorean requests numpy scikit-learn tensorflow pandas
+ - pip3 install delorean requests numpy tensorflow scikit-learn pandas flask flask-caching flask-restful flask-sqlalchemy psycopg2 webargs scipy
 script:
  - python -m unittest discover
