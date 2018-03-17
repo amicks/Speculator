@@ -30,7 +30,7 @@ curl http://localhost:5000/api/public/predict -X GET
 ### Dependencies
 Make sure these packages are installed before running Speculator:
 ``` bash
-pip3 install delorean requests numpy tensorflow scikit-learn pandas flask flask-caching flask-restful flask-sqlalchemy psycopg2 webargs
+pip3 install delorean requests numpy tensorflow scikit-learn pandas flask flask-caching flask-restful flask-sqlalchemy psycopg2 webargs scipy
 ```
 
 ### Routes Summary
