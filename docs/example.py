@@ -4,10 +4,10 @@ from speculator import market
 m = market.Market(symbol='USDT_BTC', unit='month', count=6, period=86400)
 
 # Parse features, x axis
-x = m.features(partition=14)
+x = m.set_features(partition=14)
 
 # Parse targets, y axis
-y = market.targets(x, delta=25)
+y = market.set_targets(x, delta=25)
 
 # Close is a useless statistic in predicting trends
 x = x.drop(['close'], axis=1)
