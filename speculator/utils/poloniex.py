@@ -58,7 +58,7 @@ def chart_json(start, end, period, symbol):
            '=returnChartData&currencyPair={0}&start={1}'
            '&end={2}&period={3}').format(symbol, start, end, period) 
     logger.debug(' HTTP Request URL:\n{0}'.format(url))
-    json = requests.get(url).json()
+    json = requests.get(url, timeout=30).json()
     logger.debug(' JSON:\n{0}'.format(json))
 
     if 'error' in json:
